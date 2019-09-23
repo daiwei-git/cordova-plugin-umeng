@@ -9,6 +9,10 @@
       "ios"
     ]
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daiwei-git/cordova-plugin-umeng.git"
+  },
   "keywords": [
     "cordova",
     "umeng",
@@ -17,6 +21,10 @@
     "cordova-android",
     "cordova-ios"
   ],
-  "author": "daiwei",
-  "license": "MIT"
+  "author": "daiwei-git",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/daiwei-git/cordova-plugin-umeng/issues"
+  },
+  "homepage": "https://github.com/daiwei-git/cordova-plugin-umeng#readme"
 }

@@ -23,7 +23,9 @@ import android.content.Context;
 import android.util.Log;
 
 public class UMPlugin extends CordovaPlugin {
+    
     private Context mContext = null;
+
     /**
      * 可以设置是否为游戏，如果是游戏会进行初始化
      */
