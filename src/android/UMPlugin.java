@@ -1,5 +1,9 @@
 package com.umeng.plugin;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -20,12 +24,11 @@ import com.umeng.analytics.MobclickAgent.UMAnalyticsConfig;
 import com.umeng.analytics.game.UMGameAgent;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 public class UMPlugin extends CordovaPlugin {
-    
     private Context mContext = null;
-
     /**
      * 可以设置是否为游戏，如果是游戏会进行初始化
      */
@@ -145,6 +148,14 @@ public class UMPlugin extends CordovaPlugin {
                 e.printStackTrace();
             }
             return true;
+        } else if(action.equals("getDeviceInfo")) {
+          try {
+              String deviceInfo = getDeviceInfo(mContext);
+              callbackContext.success(deviceInfo);
+          } catch (Exception e) {
+              e.printStackTrace();
+          }
+          return true;
         } else if (action.equals("setLogEnabled")) {
             boolean enabled = args.getBoolean(0);
             MobclickAgent.setDebugMode(enabled);
@@ -259,5 +270,57 @@ public class UMPlugin extends CordovaPlugin {
             return true;
         }
         return false;
+    }
+
+    private String getDeviceInfo(Context context) {
+        try {
+            org.json.JSONObject json = new org.json.JSONObject();
+            android.telephony.TelephonyManager tm = (android.telephony.TelephonyManager) context
+                    .getSystemService(Context.TELEPHONY_SERVICE);
+            String device_id = tm.getDeviceId();
+            String mac = null;
+            FileReader fstream = null;
+            try {
+                fstream = new FileReader("/sys/class/net/wlan0/address");
+            } catch (FileNotFoundException e) {
+                fstream = new FileReader("/sys/class/net/eth0/address");
+            }
+            BufferedReader in = null;
+            if (fstream != null) {
+                try {
+                    in = new BufferedReader(fstream, 1024);
+                    mac = in.readLine();
+                } catch (IOException e) {
+                } finally {
+                    if (fstream != null) {
+                        try {
+                            fstream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if (in != null) {
+                        try {
+                            in.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+            json.put("mac", mac);
+            if (TextUtils.isEmpty(device_id)) {
+                device_id = mac;
+            }
+            if (TextUtils.isEmpty(device_id)) {
+                device_id = android.provider.Settings.Secure.getString(context.getContentResolver(),
+                        android.provider.Settings.Secure.ANDROID_ID);
+            }
+            json.put("device_id", device_id);
+            return json.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

@@ -1,6 +1,6 @@
 {
-  "name": "cordova-plugin-umeng",
-  "version": "0.0.1",
+  "name": "@daiweinpm/cordova-plugin-umeng",
+  "version": "1.0.0",
   "description": "cordova 集成友盟统计",
   "cordova": {
     "id": "cordova-plugin-umeng",
