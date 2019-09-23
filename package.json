@@ -1,0 +1,22 @@
+{
+  "name": "cordova-plugin-umeng",
+  "version": "0.0.1",
+  "description": "cordova 集成友盟统计",
+  "cordova": {
+    "id": "cordova-plugin-umeng",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "keywords": [
+    "cordova",
+    "umeng",
+    "daiwei",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "author": "daiwei",
+  "license": "MIT"
+}
