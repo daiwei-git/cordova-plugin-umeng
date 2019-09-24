@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='utf-8'?>
-<plugin id="cordova-plugin-umeng" version="1.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+<plugin id="@daiweinpm/cordova-plugin-umeng" version="1.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
     
-    <name>cordova-plugin-umeng</name>
+    <name>Wechat</name>
     <keywords>cordova,umeng,daiwei</keywords>
     <description>cordova 集成友盟统计</description>
     <license>MIT</license>
 
-    <js-module name="Umeng" src="www/Umeng.js">
+    <js-module src="www/Umeng.js" name="Umeng">
         <clobbers target="Umeng" />
     </js-module>
 
@@ -52,6 +52,7 @@
         <config-file target="config.xml" parent="/widget/plugins">
             <feature name="Umeng">
                 <param name="ios-package" value="UMPlugin"/>
+                <param name="onload" value="true" />
             </feature>
         </config-file>
         <framework src="src/ios/UMMobClick.framework" custom="true" />
