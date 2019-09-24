@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "description": "cordova 集成友盟统计",
   "cordova": {
-    "id": "@daiweinpm/cordova-plugin-umeng",
+    "id": "cordova-plugin-umengd",
     "platforms": [
       "android",
       "ios"
