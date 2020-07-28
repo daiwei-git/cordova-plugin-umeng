@@ -1,5 +1,6 @@
 #import "UMPlugin.h"
 #import <UMCommon/UMCommon.h>
+#import <UMCommon/MobClick.h>
 
 @interface UMPlugin ()
 
