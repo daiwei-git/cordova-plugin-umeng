@@ -6,11 +6,6 @@ module.exports = {
             appKey, channelId 
         ]);
     },
-    onCCEvent: function(evenArray, evenValue, eventLabel) {
-        exec(null, null, "Umeng", "onCCEvent", [ 
-            evenArray, evenValue, eventLabel 
-        ]);
-    },
     onEvent: function(eventId) {
         exec(null, null, "Umeng", "onEvent", [ 
             eventId 
@@ -57,9 +52,9 @@ module.exports = {
             UID
         ]);
     },
-    profileSignInWithPUIDWithProvider: function(provider, UID) {
+    profileSignInWithPUIDWithProvider: function(UID, provider) {
         exec(null, null, "Umeng", "profileSignInWithPUIDWithProvider", [ 
-            provider, UID 
+            UID, provider 
         ]);
     },
     profileSignOff: function() {

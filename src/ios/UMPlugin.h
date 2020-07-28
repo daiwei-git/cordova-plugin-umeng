@@ -4,7 +4,6 @@
 @interface UMPlugin : CDVPlugin
 
 - (void)getDeviceId:(CDVInvokedUrlCommand*)command;
-- (void)onCCEvent:(CDVInvokedUrlCommand*)command;
 - (void)onEvent:(CDVInvokedUrlCommand*)command;
 - (void)onEventWithLabel:(CDVInvokedUrlCommand*)command;
 - (void)onEventWithParameters:(CDVInvokedUrlCommand*)command;

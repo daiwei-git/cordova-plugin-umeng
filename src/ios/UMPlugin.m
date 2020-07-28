@@ -1,6 +1,7 @@
 #import "UMPlugin.h"
 #import <UMCommon/UMCommon.h>
 #import <UMCommon/MobClick.h>
+#import <UMCommonLog/UMCommonLogHeaders.h>
 
 @interface UMPlugin ()
 
@@ -43,23 +44,6 @@
     NSString *deviceId = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:deviceId];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-}
-
-- (void)onCCEvent:(CDVInvokedUrlCommand*)command {
-    NSArray *eventArray = [command.arguments objectAtIndex:0];
-    if (eventArray == nil || [eventArray isKindOfClass:[NSNull class]]) {
-        return;
-    }
-    NSString *eventValue = [command.arguments objectAtIndex:1];
-    if (eventValue == nil && [eventValue isKindOfClass:[NSNull class]]) {
-        eventValue = nil;
-    }
-    NSString *eventLabel = [command.arguments objectAtIndex:2];
-    if (eventLabel == nil && [eventLabel isKindOfClass:[NSNull class]]) {
-        eventLabel = nil;
-    }
-    int value = [eventValue intValue];
-    [MobClick event:eventArray value:value label:eventLabel];
 }
 
 - (void)onEvent:(CDVInvokedUrlCommand*)command {
@@ -133,7 +117,7 @@
         return;
     }
     BOOL enabled = [arg0 boolValue];
-    [MobClick setLogEnabled:enabled];
+    [UMConfigure setLogEnabled:enabled];
 }
 
 - (void)profileSignInWithPUID:(CDVInvokedUrlCommand*)command  {
@@ -141,25 +125,23 @@
     if (puid == nil || [puid isKindOfClass:[NSNull class]]) {
         return;
     }
-    [MobClickGameAnalytics profileSignInWithPUID:puid];
+    [MobClick profileSignInWithPUID:puid];
 }
 
 - (void)profileSignInWithPUIDWithProvider:(CDVInvokedUrlCommand*)command {
-    NSString *provider = [command.arguments objectAtIndex:0];
-    if (provider == nil && [provider isKindOfClass:[NSNull class]]) {
-        provider = nil;
-    }
-    NSString *puid = [command.arguments objectAtIndex:1];
+    NSString *puid = [command.arguments objectAtIndex:0];
     if (puid == nil || [puid isKindOfClass:[NSNull class]]) {
         return;
     }
-    
-    [MobClickGameAnalytics profileSignInWithPUID:puid provider:provider];
+    NSString *provider = [command.arguments objectAtIndex:1];
+    if (provider == nil && [provider isKindOfClass:[NSNull class]]) {
+        provider = nil;
+    }
+    [MobClick profileSignInWithPUID:puid provider:provider];
 }
 
 - (void)profileSignOff:(NSArray *)arguments {
-    [MobClickGameAnalytics profileSignOff];
-
+    [MobClick profileSignOff];
 }
 
 @end
