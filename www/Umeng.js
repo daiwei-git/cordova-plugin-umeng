@@ -6,11 +6,6 @@ module.exports = {
             appKey, channelId 
         ]);
     },
-    onCCEvent: function(evenArray, evenValue, eventLabel) {
-        exec(null, null, "Umeng", "onCCEvent", [ 
-            evenArray, evenValue, eventLabel 
-        ]);
-    },
     onEvent: function(eventId) {
         exec(null, null, "Umeng", "onEvent", [ 
             eventId 
@@ -57,67 +52,12 @@ module.exports = {
             UID
         ]);
     },
-    profileSignInWithPUIDWithProvider: function(provider, UID) {
+    profileSignInWithPUIDWithProvider: function(UID, provider) {
         exec(null, null, "Umeng", "profileSignInWithPUIDWithProvider", [ 
-            provider, UID 
+            UID, provider 
         ]);
     },
     profileSignOff: function() {
         exec(null, null, "Umeng", "profileSignOff", []);
-    },
-    setUserLevelId: function(level) {
-        exec(null, null, "Umeng", "setUserLevelId", [ 
-            level 
-        ]);
-    },
-    startLevel: function(level) {
-        exec(null, null, "Umeng", "startLevel", [ 
-            level 
-        ]);
-    },
-    finishLevel: function(level) {
-        exec(null, null, "Umeng", "finishLevel", [ 
-            level 
-        ]);
-    },
-    failLevel: function(level) {
-        exec(null, null, "Umeng", "failLevel", [ 
-            level 
-        ]);
-    },
-    exchange: function(currencyAmount, currencyType, virtualAmount, channel, orderId) {
-        exec(null, null, "Umeng", "exchange", [ 
-            currencyAmount, currencyType, virtualAmount, channel, orderId 
-        ]);
-    },
-    pay: function(money, coin, source) {
-        exec(null, null, "Umeng", "pay", [ 
-            money, coin, source 
-        ]);
-    },
-    payWithItem: function(money, item, number, price, source) {
-        exec(null, null, "Umeng", "payWithItem", [ 
-            money, item, number, price, source 
-        ]);
-    },
-    buy: function(item, number, price) {
-        exec(null, null, "Umeng", "buy", [ 
-            item, number, price 
-        ]);
-    },
-    use: function(item, number, price) {
-        exec(null, null, "Umeng", "use", [ 
-            item, number, price 
-        ]);
-    },
-    bonus: function(coin, source) {
-        exec(null, null, "Umeng", "bonus", [ 
-            coin, source 
-        ]);
-    },
-    bonusWithItem: function(item, number, price, source) {
-        exec(null, null, "Umeng", "bonusWithItem", [ 
-            item, number, price, source 
-        ]);
     }
 };

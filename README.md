@@ -1,10 +1,10 @@
 # cordova-plugin-umeng
 
-cordova 集成友盟统计
+cordova 集成友盟统计安卓SDK 9.1+ IOS SDK 7.1+
 
 # 安装
 ```shell
-cordova plugin add @daiweinpm/cordova-plugin-umeng --variable UMENG_APPKEY_ANDROID=you android appkey --variable UMENG_CHANNEL_ANDROID=you android channel --variable UMENG_APPKEY_IOS=you is appkey --variable UMENG_CHANNEL_IOS=you ios channel
+cordova plugin add @daiweinpm/cordova-plugin-umeng --variable UMENG_APPKEY_ANDROID="you android appkey" --variable UMENG_CHANNEL_ANDROID="you android channel" --variable UMENG_APPKEY_IOS="you is appkey" --variable UMENG_CHANNEL_IOS=you ios channel
 ```
 
 ```shell
@@ -23,15 +23,72 @@ if (Umeng) {
     * 用初始化接口（如需要使用AndroidManifest.xml中配置好的appkey和channel值，
     * init调用中appkey和channel参数请置为null）。
     */
-    Umeng.init();
-
-    // debug 模式
-    Umeng.setDebugMode(false);
+    Umeng.init(appKey, channelId);
 
     /**
-     * 设置组件化的Log开关
-     * 参数: boolean 默认为false，如需查看LOG设置为true
-     */ 
-    Umeng.setLogEnabled();
+     * eventId 统计微博应用中”转发”事件发生的次数，那么在转发的函数里调用
+     */
+    Umeng.onEvent(eventId);
+    
+    /**
+     * eventId 统计微博应用中”转发”事件发生的次数，那么在转发的函数里调用
+     * label 不同的标签会分别进行统计，方便同一事件的不同标签的对比,为nil或空字符串时后台会生成和eventId同名的标签。
+     */
+    Umeng.onEventWithLabel(eventId, label);
+
+    /**
+     * eventId 统计微博应用中”转发”事件发生的次数，那么在转发的函数里调用
+     * attributes 属性中的key－value必须为String类型, 每个应用至多添加500个自定义事件，key不能超过100个 
+     */
+    Umeng.onEventWithParameters(eventId, attributes);
+
+    /**
+     * eventId 统计微博应用中”转发”事件发生的次数，那么在转发的函数里调用
+     * attributes 属性中的key－value必须为String类型, 每个应用至多添加500个自定义事件，key不能超过100个
+     * counter 自定义数值
+     */
+    Umeng.onEventWithCounter(eventId, attributes, counter);
+
+    /**
+     * 必须配对调用onPageBegin:和onPageEnd:两个函数来完成自动统计，若只调用某一个函数不会生成有效数据；
+     * 在该页面展示时调用onPageBegin:，当退出该页面时调用onPageEnd。
+     */
+    Umeng.onPageBegin(Pagename);
+
+    /**
+     * 必须配对调用beginLogPageView:和onPageEnd:两个函数来完成自动统计，若只调用某一个函数不会生成有效数据；
+     * 在该页面展示时调用beginLogPageView:，当退出该页面时调用onPageEnd。
+     */
+    Umeng.onPageEnd(Pagename);
+
+    /**
+     * 获取设备ID
+     * callBack 回调函数
+     */
+    Umeng.getDeviceId(callBack);
+
+    /**
+     * 获取设备信息
+     * callBack 回调函数
+     */
+    Umeng.getDeviceInfo(callBack);
+
+    /**
+     * 【友盟+】在统计用户时以设备为标准，如果需要统计应用自身的账号，可以使用此功能
+     * UserID 用户ID
+     */
+    Umeng.profileSignInWithPUID(UserID);
+
+    /**
+     * 【友盟+】在统计用户时以设备为标准，如果需要统计应用自身的账号，可以使用此功能
+     * UserID 用户ID
+     * provider 不能以下划线”_”开头，使用大写字母和数字标识; 如果是上市公司，建议使用股票代码。
+     */
+    Umeng.profileSignInWithPUIDWithProvider(UserID, provider);
+
+    /**
+     * Signoff调用后，不再发送账号内容
+     */
+    Umeng.profileSignOff(); 
 }
 ```
