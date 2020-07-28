@@ -21,6 +21,12 @@
 }
 #endif
 
+- (void)pluginInitialize {
+    NSString* appKey = [[self.commandDelegate settings] objectForKey:@"umeng_appkey"];
+    NSString* channelId = [[self.commandDelegate settings] objectForKey:@"umeng_channel"];
+    [UMConfigure initWithAppkey: appKey channel: channelId];
+}
+
 - (void)init:(CDVInvokedUrlCommand*)command {
     NSString *appKey = [command.arguments objectAtIndex:0];
     if (appKey == nil || [appKey isKindOfClass:[NSNull class]]) {

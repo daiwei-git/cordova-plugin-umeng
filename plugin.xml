@@ -48,12 +48,14 @@
 
         <header-file src="src/ios/UMPlugin.h" />
         <source-file src="src/ios/UMPlugin.m" />
-        
+
         <config-file target="config.xml" parent="/widget/plugins">
             <feature name="Umeng">
                 <param name="ios-package" value="UMPlugin"/>
                 <param name="onload" value="true" />
             </feature>
+            <preference name="UMENG_APPKEY" value="$UMENG_APPKEY_IOS"/>
+            <preference name="UMENG_CHANNEL" value="$UMENG_CHANNEL_IOS"/>
         </config-file>
         <framework src="src/ios/UMCommon.framework" custom="true" />
         <framework src="CoreTelephony.framework" />
