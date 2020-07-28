@@ -56,7 +56,7 @@ public class UMPlugin extends CordovaPlugin {
         if (action.equals("init")) {
             String appKey = args.getString(0);
             String channelId = args.getString(1);
-            UMConfigure.init(mContext, appKey, channelId, deviceType, pushSecret);
+            UMConfigure.init(mContext, appKey, channelId);
             MobclickAgent.setScenarioType(mContext, EScenarioType.E_UM_NORMAL);
             MobclickAgent.onResume(mContext);
             return true;
@@ -89,7 +89,7 @@ public class UMPlugin extends CordovaPlugin {
           }
           return true;
         } else if (action.equals("setLogEnabled")) {
-            return setLogEnabled();
+            return setLogEnabled(args);
         } else if (action.equals("profileSignInWithPUID")) {
             return profileSignInWithPUID(args);
         } else if (action.equals("profileSignInWithPUIDWithProvider")) {
@@ -200,7 +200,7 @@ public class UMPlugin extends CordovaPlugin {
     private String getDeviceInfo(Context context) {
         try {
             org.json.JSONObject json = new org.json.JSONObject();
-            String deviceId = getDeviceId();
+            String deviceId = getDeviceId(context);
             String mac = null;
             FileReader fstream = null;
             try {
