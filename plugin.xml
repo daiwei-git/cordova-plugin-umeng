@@ -48,7 +48,7 @@
 
         <header-file src="src/ios/UMPlugin.h" />
         <source-file src="src/ios/UMPlugin.m" />
-
+        
         <config-file target="config.xml" parent="/widget/plugins">
             <feature name="Umeng">
                 <param name="ios-package" value="UMPlugin"/>

@@ -30,10 +30,7 @@
     if ([channelId isKindOfClass:[NSNull class]]) {
         channelId = nil;
     }
-    UMConfigInstance.appKey = appKey;
-        
-    UMConfigInstance.channelId=channelId;
-    [MobClick startWithConfigure:UMConfigInstance];
+    [UMConfigure initWithAppkey: appKey channel: channelId];
 }
 
 - (void)getDeviceId:(CDVInvokedUrlCommand*)command {
