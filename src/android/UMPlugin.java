@@ -21,28 +21,14 @@ import org.json.JSONObject;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.analytics.MobclickAgent.EScenarioType;
 import com.umeng.analytics.MobclickAgent.UMAnalyticsConfig;
-import com.umeng.analytics.game.UMGameAgent;
 
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
 public class UMPlugin extends CordovaPlugin {
-    private Context mContext = null;
-    /**
-     * 可以设置是否为游戏，如果是游戏会进行初始化
-     */
-    private boolean isGameInited = false;
 
-    /**
-     * 初始化游戏
-     */
-    private void initGame() {
-        UMGameAgent.init(mContext);
-        UMGameAgent.setPlayerLevel(1);
-        MobclickAgent.setScenarioType(mContext, EScenarioType.E_UM_GAME);
-        isGameInited = true;
-    }
+    private Context mContext = null;
 
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
@@ -171,102 +157,6 @@ public class UMPlugin extends CordovaPlugin {
             return true;
         } else if (action.equals("profileSignOff")) {
             MobclickAgent.onProfileSignOff();
-            return true;
-        } else if (action.equals("setUserLevelId")) {
-            if (!isGameInited) {
-                initGame();
-            }
-            int level = args.getInt(0);
-            UMGameAgent.setPlayerLevel(level);
-            return true;
-        } else if (action.equals("startLevel")) {
-            if (!isGameInited) {
-                initGame();
-            }
-            String level = args.getString(0);
-            UMGameAgent.startLevel(level);
-            return true;
-        } else if (action.equals("finishLevel")) {
-            if (!isGameInited) {
-                initGame();
-            }
-            String level = args.getString(0);
-            UMGameAgent.failLevel(level);
-            return true;
-        } else if (action.equals("failLevel")) {
-            if (!isGameInited) {
-                initGame();
-            }
-            String level = args.getString(0);
-            UMGameAgent.finishLevel(level);
-
-            return true;
-        } else if (action.equals("exchange")) {
-            if (!isGameInited) {
-                initGame();
-            }
-            double currencyAmount = args.getDouble(0);
-            String currencyType = args.getString(1);
-            double virtualAmount = args.getDouble(2);
-            int channel = args.getInt(3);
-            String orderId = args.getString(4);
-            UMGameAgent.exchange(currencyAmount, currencyType, virtualAmount, channel, orderId);
-            return true;
-        } else if (action.equals("pay")) {
-            if (!isGameInited) {
-                initGame();
-            }
-            double money = args.getDouble(0);
-            double coin = args.getDouble(1);
-            int source = args.getInt(2);
-            UMGameAgent.pay(money, coin, source);
-            return true;
-        } else if (action.equals("payWithItem")) {
-            if (!isGameInited) {
-                initGame();
-            }
-            double money = args.getDouble(0);
-            String item = args.getString(1);
-            int number = args.getInt(2);
-            double price = args.getDouble(3);
-            int source = args.getInt(4);
-            UMGameAgent.pay(money, item, number, price, source);
-            return true;
-        } else if (action.equals("buy")) {
-            if (!isGameInited) {
-                initGame();
-            }
-            String item = args.getString(0);
-            int number = args.getInt(1);
-            double price = args.getDouble(2);
-            UMGameAgent.buy(item, number, price);
-            return true;
-        } else if (action.equals("use")) {
-            if (!isGameInited) {
-                initGame();
-            }
-            String item = args.getString(0);
-            int number = args.getInt(1);
-            double price = args.getDouble(2);
-            UMGameAgent.use(item, number, price);
-            return true;
-        } else if (action.equals("bonus")) {
-            if (!isGameInited) {
-                initGame();
-            }
-            double coin = args.getDouble(0);
-            int source = args.getInt(1);
-            UMGameAgent.bonus(coin, source);
-            return true;
-        } else if (action.equals("bonusWithItem")) {
-            if (!isGameInited) {
-                initGame();
-            }
-            String item = args.getString(0);
-            int number = args.getInt(1);
-            double price = args.getDouble(2);
-            int source = args.getInt(3);
-            UMGameAgent.bonus(item, number, price, source);
             return true;
         }
         return false;

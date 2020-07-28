@@ -1,6 +1,5 @@
 #import "UMPlugin.h"
-#import <UMMobClick/MobClick.h>
-#import <UMMobClick/MobClickGameAnalytics.h>
+#import <UMCommon/UMCommon.h>
 
 @interface UMPlugin ()
 
@@ -21,7 +20,6 @@
 }
 #endif
 
-
 - (void)init:(CDVInvokedUrlCommand*)command {
     NSString *appKey = [command.arguments objectAtIndex:0];
     if (appKey == nil || [appKey isKindOfClass:[NSNull class]]) {
@@ -35,7 +33,6 @@
         
     UMConfigInstance.channelId=channelId;
     [MobClick startWithConfigure:UMConfigInstance];
-
 }
 
 - (void)getDeviceId:(CDVInvokedUrlCommand*)command {
@@ -160,192 +157,5 @@
     [MobClickGameAnalytics profileSignOff];
 
 }
-//游戏统计
 
-- (void)setUserLevelId:(CDVInvokedUrlCommand*)command {
-    NSString *level = [command.arguments objectAtIndex:0];
-    if (level == nil || [level isKindOfClass:[NSNull class]]) {
-        return;
-    }
-    int levelValue = [level intValue];
-    [MobClickGameAnalytics setUserLevelId:levelValue];
-}
-
-- (void)startLevel:(CDVInvokedUrlCommand*)command  {
-    NSString *level = [command.arguments objectAtIndex:0];
-    if (level == nil || [level isKindOfClass:[NSNull class]]) {
-        return;
-    }
-    [MobClickGameAnalytics startLevel:level];
-}
-
-- (void)finishLevel:(CDVInvokedUrlCommand*)command   {
-    NSString *level = [command.arguments objectAtIndex:0];
-    if (level == nil || [level isKindOfClass:[NSNull class]]) {
-        return;
-    }
-    [MobClickGameAnalytics finishLevel:level];
-}
-
-- (void)failLevel:(CDVInvokedUrlCommand*)command {
-    NSString *level = [command.arguments objectAtIndex:0];
-    if (level == nil || [level isKindOfClass:[NSNull class]]) {
-        return;
-    }
-    [MobClickGameAnalytics failLevel:level];
-}
-
-- (void)exchange:(CDVInvokedUrlCommand*)command {
-   
-    NSString *currencyAmount = [command.arguments objectAtIndex:0];
-    if (currencyAmount == nil && [currencyAmount isKindOfClass:[NSNull class]]) {
-        currencyAmount = nil;
-    }
-    NSString *currencyType = [command.arguments objectAtIndex:1];
-    if (currencyType == nil && [currencyType isKindOfClass:[NSNull class]]) {
-        currencyType = nil;
-    }
-    NSString *virtualAmount = [command.arguments objectAtIndex:2];
-    if (virtualAmount == nil && [virtualAmount isKindOfClass:[NSNull class]]) {
-        virtualAmount = nil;
-    }
-    NSString *channel = [command.arguments objectAtIndex:3];
-    if (channel == nil && [channel isKindOfClass:[NSNull class]]) {
-        channel = nil;
-    }
-    NSString *orderId = [command.arguments objectAtIndex:4];
-    if (orderId == nil || [orderId isKindOfClass:[NSNull class]]) {
-        return;
-    }
-    double currencyAmountDouble = [currencyAmount doubleValue];
-    double virtualAmountDouble = [virtualAmount doubleValue];
-    int channelInt = [channel intValue];
-    [MobClickGameAnalytics exchange:orderId currencyAmount:currencyAmountDouble currencyType:currencyType virtualCurrencyAmount:virtualAmountDouble paychannel:channelInt];
-}
-
-- (void)pay:(CDVInvokedUrlCommand*)command {
-    NSString *cash = [command.arguments objectAtIndex:0];
-    if (cash == nil || [cash isKindOfClass:[NSNull class]]) {
-        return;
-    }
-    NSString *coin = [command.arguments objectAtIndex:1];
-    if (coin == nil && [coin isKindOfClass:[NSNull class]]) {
-        coin = nil;
-    }
-    NSString *source = [command.arguments objectAtIndex:2];
-    if (source == nil && [source isKindOfClass:[NSNull class]]) {
-        source = nil;
-    }
-    
-    
-    double cashDouble = [cash doubleValue];
-    int sourceInt = [source doubleValue];
-    double coinDouble = [coin doubleValue];
-    [MobClickGameAnalytics pay:cashDouble source:sourceInt coin:coinDouble];
-}
-
-- (void)payWithItem:(CDVInvokedUrlCommand*)command {
-    NSString *cash = [command.arguments objectAtIndex:0];
-    if (cash == nil || [cash isKindOfClass:[NSNull class]]) {
-        return;
-    }
-    NSString *item = [command.arguments objectAtIndex:1];
-    if (item == nil && [item isKindOfClass:[NSNull class]]) {
-        item = nil;
-    }
-    NSString *amount = [command.arguments objectAtIndex:2];
-    if (amount == nil && [amount isKindOfClass:[NSNull class]]) {
-        amount = nil;
-    }
-    NSString *price = [command.arguments objectAtIndex:3];
-    if (price == nil && [price isKindOfClass:[NSNull class]]) {
-        price = nil;
-    }
-    NSString *source = [command.arguments objectAtIndex:4];
-    if (source == nil && [source isKindOfClass:[NSNull class]]) {
-        source = nil;
-    }
-    double cashDoule = [cash doubleValue];
-    int sourceInt = [source intValue];
-    int amountInt = [amount intValue];
-    double priceDouble = [price doubleValue];
-    [MobClickGameAnalytics pay:cashDoule source:sourceInt item:item amount:amountInt price:priceDouble];
-}
-
-- (void)buy:(CDVInvokedUrlCommand*)command {
-    NSString *item = [command.arguments objectAtIndex:0];
-    if (item == nil || [item isKindOfClass:[NSNull class]]) {
-        return;
-    }
-    NSString *amount = [command.arguments objectAtIndex:1];
-    if (amount == nil && [amount isKindOfClass:[NSNull class]]) {
-        amount = nil;
-    }
-    NSString *price = [command.arguments objectAtIndex:2];
-    if (price == nil && [price isKindOfClass:[NSNull class]]) {
-        price = nil;
-    }
-    
-    int amountInt = [amount doubleValue];
-    double priceDouble = [price doubleValue];
-    [MobClickGameAnalytics buy:item amount:amountInt price:priceDouble];
-}
-
-- (void)use:(CDVInvokedUrlCommand*)command {
-    NSString *item = [command.arguments objectAtIndex:0];
-    if (item == nil || [item isKindOfClass:[NSNull class]]) {
-        return;
-    }
-    NSString *amount = [command.arguments objectAtIndex:1];
-    if (amount == nil && [amount isKindOfClass:[NSNull class]]) {
-        amount = nil;
-    }
-    NSString *price = [command.arguments objectAtIndex:2];
-    if (price == nil && [price isKindOfClass:[NSNull class]]) {
-        price = nil;
-    }
-    
-    int amountInt = [amount doubleValue];
-    double priceDouble = [price doubleValue];
-    [MobClickGameAnalytics use:item amount:amountInt price:priceDouble];
-}
-
-- (void)bonus:(CDVInvokedUrlCommand*)command {
-    NSString *coin = [command.arguments objectAtIndex:0];
-    if (coin == nil || [coin isKindOfClass:[NSNull class]]) {
-        return;
-    }
-    NSString *source = [command.arguments objectAtIndex:1];
-    if (source == nil && [source isKindOfClass:[NSNull class]]) {
-        source = nil;
-    }
-    
-    double coinDouble = [coin doubleValue];
-    int sourceInt = [source doubleValue];
-    [MobClickGameAnalytics bonus:coinDouble source:sourceInt];
-}
-
-- (void)bonusWithItem:(CDVInvokedUrlCommand*)command {
-    NSString *item = [command.arguments objectAtIndex:0];
-    if (item == nil || [item isKindOfClass:[NSNull class]]) {
-        return;
-    }
-    NSString *amount = [command.arguments objectAtIndex:1];
-    if (amount == nil && [amount isKindOfClass:[NSNull class]]) {
-        amount = nil;
-    }
-    NSString *price = [command.arguments objectAtIndex:2];
-    if (price == nil && [price isKindOfClass:[NSNull class]]) {
-        price = nil;
-    }
-    NSString *source = [command.arguments objectAtIndex:3];
-    if (source == nil && [source isKindOfClass:[NSNull class]]) {
-        source = nil;
-    }
-    
-    int amountInt = [amount doubleValue];
-    double priceDouble = [price doubleValue];
-    int sourceInt = [source doubleValue];
-    [MobClickGameAnalytics bonus:item amount:amountInt price:priceDouble source:sourceInt];
-}
 @end

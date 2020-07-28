@@ -7,7 +7,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.umeng.analytics.MobclickAgent.EScenarioType;
 
 public class UMActivity extends CordovaActivity {
-  @Override
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Set by <content src="index.html" /> in config.xml
@@ -15,9 +15,8 @@ public class UMActivity extends CordovaActivity {
         initUmengSDK();
     }
 
-    /********************** 集成友盟SDK方式2,建议使用 Begin **********************/
     /**
-     * onCreate中调用
+     * 初始化友盟 SDK
      */
     private void initUmengSDK() {
         MobclickAgent.setScenarioType(this, EScenarioType.E_UM_NORMAL);
@@ -37,6 +36,5 @@ public class UMActivity extends CordovaActivity {
         super.onPause();
         MobclickAgent.onPause(this);
     }
-    /********************** 集成友盟SDK方式2,建议使用 End **********************/
 
 }

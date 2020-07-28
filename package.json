@@ -19,7 +19,8 @@
     "daiwei",
     "ecosystem:cordova",
     "cordova-android",
-    "cordova-ios"
+    "cordova-ios",
+    "友盟"
   ],
   "author": "daiwei-git",
   "license": "MIT",

@@ -18,7 +18,7 @@
 
     <!-- android -->
     <platform name="android">
-        <lib-file src="src/android/umeng-analytics-v6.0.0.jar" />
+        <lib-file src="src/android/umeng-common-9.1.2.jar" />
         <source-file src="src/android/UMPlugin.java" target-dir="src/com/umeng/plugin" />
         <source-file src="src/android/UMActivity.java" target-dir="src/com/ihealthlabs/plugins" />
         <config-file target="res/xml/config.xml" parent="/widget/plugins">
@@ -55,7 +55,7 @@
                 <param name="onload" value="true" />
             </feature>
         </config-file>
-        <framework src="src/ios/UMMobClick.framework" custom="true" />
+        <framework src="src/ios/UMCommon.framework" custom="true" />
         <framework src="CoreTelephony.framework" />
         <framework src="libsqlite3.tbd"/>
         <framework src="libz.tbd"/>
