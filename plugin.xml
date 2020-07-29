@@ -1,29 +1,21 @@
 <?xml version='1.0' encoding='utf-8'?>
-<plugin id="cordova-plugin-umengd" version="2.0.11" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
-    
+<plugin id="cordova-plugin-umengd" version="2.0.13" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
     <name>Umeng</name>
-    <keywords>cordova,umeng,daiwei</keywords>
+    <keywords>cordova,umeng,daiwei,友盟</keywords>
     <description>cordova 集成友盟统计</description>
     <license>MIT</license>
-
     <js-module src="www/Umeng.js" name="Umeng">
         <clobbers target="Umeng" />
     </js-module>
-
     <preference name="UMENG_APPKEY_ANDROID" />
     <preference name="UMENG_CHANNEL_ANDROID" />
-
     <preference name="UMENG_APPKEY_IOS" />
     <preference name="UMENG_CHANNEL_IOS" />
-
     <!-- android -->
     <platform name="android">
         <!-- 友盟依赖 -->
         <lib-file src="src/android/umeng-common-9.1.2.jar" />
-
         <source-file src="src/android/UMPlugin.java" target-dir="src/com/umeng/plugin" />
-        <source-file src="src/android/UMActivity.java" target-dir="src/com/ihealthlabs/plugins" />
-
         <config-file target="res/xml/config.xml" parent="/widget/plugins">
             <feature name="Umeng">
                 <param name="android-package" value="com.umeng.plugin.UMPlugin"/>
@@ -49,14 +41,11 @@
             <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
         </config-file>
     </platform>
-
     <!-- ios -->
     <platform name="ios">
-    
         <!-- 插件 -->
         <header-file src="src/ios/UMPlugin.h" />
         <source-file src="src/ios/UMPlugin.m" />
-        
         <!-- 配置 -->
         <config-file target="config.xml" parent="/widget/plugins">
             <feature name="Umeng">
@@ -66,16 +55,13 @@
             <preference name="UMENG_APPKEY" value="$UMENG_APPKEY_IOS"/>
             <preference name="UMENG_CHANNEL" value="$UMENG_CHANNEL_IOS"/>
         </config-file>
-
         <!-- 友盟依赖 -->
         <framework src="src/ios/UMCommon.framework" custom="true" framework="true"/>
         <framework src="src/ios/UMCommonLog.framework" custom="true" framework="true"/>
-
         <!-- 系统依赖 -->
         <framework src="CoreTelephony.framework" />
         <framework src="libsqlite3.tbd"/>
         <framework src="libz.tbd"/>
-        
         <!-- 配置 -->
         <config-file target="*-Info.plist" parent="UMENG_APPKEY">
             <string>$UMENG_APPKEY_IOS</string>
@@ -83,7 +69,5 @@
         <config-file target="*-Info.plist" parent="UMENG_CHANNEL">
             <string>$UMENG_CHANNEL_IOS</string>
         </config-file>
-
     </platform>
-
 </plugin>

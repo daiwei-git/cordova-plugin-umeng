@@ -181,8 +181,8 @@ public class UMPlugin extends CordovaPlugin {
     }
 
     private boolean setLogEnabled(JSONArray args) {
-        // boolean enabled = args.getBoolean(0);
-        // MobclickAgent.setDebugMode(enabled);
+        boolean enabled = args.getBoolean(0);
+        UMConfigure.setLogEnabled(enabled);
         return true;
     }
 
