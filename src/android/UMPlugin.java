@@ -33,19 +33,12 @@ public class UMPlugin extends CordovaPlugin {
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
-
-        String appKey = webView.getPreferences().getString('umeng_appkey', "");
-        String channelId = webView.getPreferences().getString('umeng_channel', "");
-
-        Log.d("UMPlugin", "appkey:" + appKey);
-        Log.d("UMPlugin", "channelId:" + channelId);
-
+        
         this.mContext = cordova.getActivity().getApplicationContext();
 
-        if (appKey && channelId) {
-            UMConfigure.init(mContext, appKey, channelId);
-        }
-        
+        // 初始化
+        UMConfigure.init(mContext);
+
         // 页面采集模式
         MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
         // 普通模式
