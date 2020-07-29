@@ -1,9 +1,9 @@
 var exec = require('cordova/exec');
 
 module.exports = {
-    init: function(appKey, channelId) {
+    init: function(appKey, channelId, deviceType, pushSecret) {
         exec(null, null, "Umeng", "init", [ 
-            appKey, channelId 
+            appKey, channelId, deviceType, pushSecret
         ]);
     },
     onEvent: function(eventId) {

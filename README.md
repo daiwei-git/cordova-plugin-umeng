@@ -27,9 +27,13 @@ if (Umeng) {
     /**
     * 注意: 即使您已经在AndroidManifest.xml中配置过appkey和channel值，也需要在App代码中调
     * 用初始化接口（如需要使用AndroidManifest.xml中配置好的appkey和channel值，
-    * init调用中appkey和channel参数请置为null。
+    * init调用中appkey和channel参数请置为null，IOS 的参数 deviceType 和 pushSecret 暂不生效。
+    * appKey 友盟appkey
+    * channelId 渠道ID
+    * deviceType 设备类型，1 为手机、2 为盒子，默认为手机
+    * pushSecret 推送密钥 Push 推送业务的secret
     */
-    Umeng.init(appKey, channelId);
+    Umeng.init(appKey, channelId, deviceType, pushSecret);
 
     /**
      * eventId 统计微博应用中”转发”事件发生的次数，那么在转发的函数里调用
