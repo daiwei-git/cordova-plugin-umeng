@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<plugin id="cordova-plugin-umengd" version="2.0.10" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+<plugin id="cordova-plugin-umengd" version="2.0.11" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
     
     <name>Umeng</name>
     <keywords>cordova,umeng,daiwei</keywords>
@@ -27,7 +27,10 @@
         <config-file target="res/xml/config.xml" parent="/widget/plugins">
             <feature name="Umeng">
                 <param name="android-package" value="com.umeng.plugin.UMPlugin"/>
+                <param name="onload" value="true" />
             </feature>
+            <preference name="UMENG_APPKEY" value="$UMENG_APPKEY_ANDROID"/>
+            <preference name="UMENG_CHANNEL" value="$UMENG_CHANNEL_ANDROID"/>
         </config-file>
 
         <config-file target="AndroidManifest.xml"  parent="application">
