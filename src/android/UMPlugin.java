@@ -248,7 +248,7 @@ public class UMPlugin extends CordovaPlugin {
     private boolean profileSignOff() {
         try {
             MobclickAgent.onProfileSignOff();
-        } catch (JSONException e) {
+        } catch (Exception e) {
             return false;
         }
         return true;
