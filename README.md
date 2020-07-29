@@ -4,7 +4,7 @@ cordova 集成友盟统计安卓SDK 9.1+ IOS SDK 7.1+
 
 # 安装
 ```shell
-cordova plugin add @daiweinpm/cordova-plugin-umeng --variable UMENG_APPKEY_ANDROID="you android appkey" --variable UMENG_CHANNEL_ANDROID="you android channel" --variable UMENG_APPKEY_IOS="you is appkey" --variable UMENG_CHANNEL_IOS=you ios channel
+cordova plugin add @daiweinpm/cordova-plugin-umeng --variable UMENG_APPKEY_ANDROID="you android appkey" --variable UMENG_CHANNEL_ANDROID="you android channel" --variable UMENG_APPKEY_IOS="you is appkey" --variable UMENG_CHANNEL_IOS="you ios channel"
 ```
 
 ```shell
@@ -15,13 +15,19 @@ cordova build android
 ### 使用方式
 ```Javascript
 
+/**
+ * 请在代码中引入这一句 或者从window中使用 window.Umeng，
+ */
 declare const Umeng;
 
+/**
+ * 插件安装失败时此对象可能无法使用 所以需要加入判断
+ */
 if (Umeng) {
     /**
     * 注意: 即使您已经在AndroidManifest.xml中配置过appkey和channel值，也需要在App代码中调
     * 用初始化接口（如需要使用AndroidManifest.xml中配置好的appkey和channel值，
-    * init调用中appkey和channel参数请置为null）。
+    * init调用中appkey和channel参数请置为null。
     */
     Umeng.init(appKey, channelId);
 
@@ -32,7 +38,7 @@ if (Umeng) {
     
     /**
      * eventId 统计微博应用中”转发”事件发生的次数，那么在转发的函数里调用
-     * label 不同的标签会分别进行统计，方便同一事件的不同标签的对比,为nil或空字符串时后台会生成和eventId同名的标签。
+     * label 不同的标签会分别进行统计，方便同一事件的不同标签的对比,为nil或空字符串时后台会生成和eventId同的标签。
      */
     Umeng.onEventWithLabel(eventId, label);
 
@@ -90,5 +96,10 @@ if (Umeng) {
      * Signoff调用后，不再发送账号内容
      */
     Umeng.profileSignOff(); 
+
+    /**
+     * 打开统计SDK调试模式
+     */
+    Umeng.setLogEnabled(true); 
 }
 ```
