@@ -33,16 +33,7 @@ public class UMPlugin extends CordovaPlugin {
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
-        
         this.mContext = cordova.getActivity().getApplicationContext();
-
-        // 初始化
-        UMConfigure.init(mContext);
-
-        // 页面采集模式
-        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
-        // 普通模式
-        MobclickAgent.setScenarioType(mContext, EScenarioType.E_UM_NORMAL);
     }
 
     @Override
@@ -65,7 +56,13 @@ public class UMPlugin extends CordovaPlugin {
         if (action.equals("init")) {
             String appKey = args.getString(0);
             String channelId = args.getString(1);
+            // 初始化
             UMConfigure.init(mContext, appKey, channelId);
+            // 页面采集模式
+            MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
+            // 普通模式
+            MobclickAgent.setScenarioType(mContext, EScenarioType.E_UM_NORMAL);
+            MobclickAgent.onResume(mContext);
             return true;
         } else if (action.equals("onEvent")) {
             return onEvent(args, mContext);
