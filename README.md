@@ -3,7 +3,7 @@
 cordova 集成友盟统计安卓SDK 9.4+ IOS SDK 7.3+
 
 # 新版说明
-新增友盟自动化测试SDK，友盟性能检测SDK
+新增友盟自动化测试SDK，友盟性能检测SDK，由于隐私政策原因，默认自动收集已改为手动收集，请在适当的时候使用init函数初始化
 
 # 安装
 
@@ -12,7 +12,7 @@ npm i @daiweinpm/cordova-plugin-umeng
 ```
 
 ```shell
-cordova plugin add @daiweinpm/cordova-plugin-umeng --variable UMENG_APPKEY_ANDROID="you android appkey" --variable UMENG_CHANNEL_ANDROID="you android channel" --variable UMENG_APPKEY_IOS="you is appkey" --variable UMENG_CHANNEL_IOS="you ios channel"
+cordova plugin add @daiweinpm/cordova-plugin-umeng
 ```
 
 ```shell
