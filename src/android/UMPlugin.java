@@ -41,7 +41,8 @@ public class UMPlugin extends CordovaPlugin {
         Log.d("UMPlugin", "channelId:" + channelId);
 
         this.mContext = cordova.getActivity().getApplicationContext();
-
+        // 预初始化
+        MConfigure.preInit();
         // 初始化
         UMConfigure.init(mContext, appKey, channelId, UMConfigure.DEVICE_TYPE_PHONE, "");
         // 页面采集模式

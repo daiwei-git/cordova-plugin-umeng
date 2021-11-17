@@ -198,7 +198,9 @@ analytics_init_error74 = "link 必须是NSUrl类型 ";
 analytics_init_error75 = "link 不能为空 ";
 analytics_init_error76 = "property的key只能是NSString类型且不能为空";
 
-
+analytics_init_error77 = "ModuleTag 必须是NSString类型";
+analytics_init_error78 = "ModuleTag key长度不能大于64，value长度不能大于128";
+analytics_init_error79 = "ModuleTag 不能超过30个";
 
 
 analytics_init_warn1 = "provider 为空";

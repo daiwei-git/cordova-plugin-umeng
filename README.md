@@ -1,8 +1,16 @@
 # cordova-plugin-umeng
 
-cordova 集成友盟统计安卓SDK 9.1+ IOS SDK 7.1+
+cordova 集成友盟统计安卓SDK 9.4+ IOS SDK 7.3+
+
+# 新版说明
+新增友盟自动化测试SDK，友盟性能检测SDK
 
 # 安装
+
+```shell
+npm i @daiweinpm/cordova-plugin-umeng
+```
+
 ```shell
 cordova plugin add @daiweinpm/cordova-plugin-umeng --variable UMENG_APPKEY_ANDROID="you android appkey" --variable UMENG_CHANNEL_ANDROID="you android channel" --variable UMENG_APPKEY_IOS="you is appkey" --variable UMENG_CHANNEL_IOS="you ios channel"
 ```

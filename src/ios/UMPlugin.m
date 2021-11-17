@@ -1,7 +1,20 @@
 #import "UMPlugin.h"
+// COMMON
 #import <UMCommon/UMCommon.h>
 #import <UMCommon/MobClick.h>
+// APM
+#import <UMAPM/UMLaunch.h>
+#import <UMAPM/UMCrashConfigure.h>
+#import <UMAPM/UMAPMConfig.h>
+// LOG
 #import <UMCommonLog/UMCommonLogHeaders.h>
+// DEVICE
+#import <UMDevice/UMZid.h>
+// UMRemoteConfig
+#import <UMRemoteConfig/UMRemoteConfig.h>
+#import <UMRemoteConfig/UMRemoteConfigSettings.h>
+// UTDID
+#import <UTDID/UTDevice.h>
 
 @interface UMPlugin ()
 
