@@ -7,10 +7,7 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 
-typedef void(^CallbackBlock)();
-
-@class CLLocation;
-@interface MobClick : NSObject <UIAlertViewDelegate>
+@interface MobClick : NSObject
 
 #pragma mark basics
 
@@ -18,11 +15,7 @@ typedef void(^CallbackBlock)();
 /// @name  设置
 ///---------------------------------------------------------------------------------------
 
-/** 开启CrashReport收集, 默认YES(开启状态).
- @param value 设置为NO,可关闭友盟CrashReport收集功能.
- @return void.
-*/
-+ (void)setCrashReportEnabled:(BOOL)value;
+
 
 #pragma mark event logs
 ///---------------------------------------------------------------------------------------
@@ -88,7 +81,7 @@ typedef void(^CallbackBlock)();
  @param millisecond 自己计时需要的话需要传毫秒进来
  @return void.
  
- @warning 每个event的attributes不能超过10个
+ @warning 每个event的attributes不能超过100个
     eventId、attributes中key和value都不能使用空格和特殊字符，必须是NSString,且长度不能超过255个字符（否则将截取前255个字符）
     id， ts， du是保留字段，不能作为eventId及key的名称
 */
@@ -163,11 +156,6 @@ typedef void(^CallbackBlock)();
  */
 + (void)setLatitude:(double)latitude longitude:(double)longitude;
 
-/** 设置经纬度信息
- @param location CLLocation 经纬度信息
- @return void
- */
-+ (void)setLocation:(CLLocation *)location;
 
 ///---------------------------------------------------------------------------------------
 /// @name Utility函数
@@ -187,13 +175,6 @@ typedef void(^CallbackBlock)();
  */
 + (void)setSecret:(NSString *)secret;
 
-+ (void)setCrashCBBlock:(CallbackBlock)cbBlock;
-
-/** DeepLink事件
- @param link 唤起应用的link
- @return void.
- */
-+ (void)onDeepLinkReceived:(NSURL *)link;
 
 /**
  * 设置预置事件属性 键值对 会覆盖同名的key
@@ -227,6 +208,12 @@ typedef void(^CallbackBlock)();
  @param value 设置为YES, umeng SDK 会将自动采集页面信息
  */
 + (void)setAutoPageEnabled:(BOOL)value;
+
+/**
+ *集成测试。
+ */
++ (BOOL)handleUrl:(NSURL *)url;
+
 
 @end
 

@@ -39,4 +39,7 @@
 */
 + (void)setAnalyticsEnabled:(BOOL)value;
 
+//获取zid
++ (NSString *)getUmengZID;
+
 @end

@@ -41,13 +41,14 @@ public class UMPlugin extends CordovaPlugin {
         Log.d("UMPlugin", "channelId:" + channelId);
 
         this.mContext = cordova.getActivity().getApplicationContext();
-
+        // 预初始化
+        MConfigure.preInit();
         // 初始化
-        UMConfigure.init(mContext, appKey, channelId, UMConfigure.DEVICE_TYPE_PHONE, "");
+        //UMConfigure.init(mContext, appKey, channelId, UMConfigure.DEVICE_TYPE_PHONE, "");
         // 页面采集模式
-        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
+        //MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
         // 普通模式
-        MobclickAgent.setScenarioType(mContext, EScenarioType.E_UM_NORMAL);
+        //MobclickAgent.setScenarioType(mContext, EScenarioType.E_UM_NORMAL);
     }
 
     @Override
@@ -72,12 +73,22 @@ public class UMPlugin extends CordovaPlugin {
             String channelId = args.getString(1);
             Integer deviceType = args.getInt(2);
             String pushSecret = args.getString(3);
-            // 初始化
-           if (appKey.isEmpty() && channelId.isEmpty()) {
-               UMConfigure.init(mContext, deviceType, pushSecret);
-            } else {
-               UMConfigure.init(mContext, appKey, channelId, deviceType, pushSecret);
+            if (appKey.isEmpty()) {
+                Log.d("UMPlugin", "appKey 必须");
+                return false;
             }
+            if (channelId.isEmpty()) {
+                Log.d("UMPlugin", "channelId 必须");
+                return false;
+            }
+            // 初始化
+            //if (appKey.isEmpty() && channelId.isEmpty() ) {
+            //  UMConfigure.init(mContext, deviceType, pushSecret);
+            //} else {
+            //  UMConfigure.init(mContext, appKey, channelId, deviceType, pushSecret);
+            //}
+            // 初始化
+            UMConfigure.init(mContext, appKey, channelId, deviceType, pushSecret);
             // 页面采集模式
             MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
             // 普通模式
@@ -118,6 +129,8 @@ public class UMPlugin extends CordovaPlugin {
             return profileSignInWithPUID(args);
         } else if (action.equals("profileSignInWithPUIDWithProvider")) {
             return profileSignInWithPUIDWithProvider(args);
+        } else if (action.equals("profileSignOff")) {
+            return profileSignOff();
         } else if (action.equals("profileSignOff")) {
             return profileSignOff();
         }

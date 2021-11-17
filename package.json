@@ -1,7 +1,7 @@
 {
   "name": "@daiweinpm/cordova-plugin-umeng",
-  "version": "2.0.19",
-  "description": "cordova 集成友盟统计安卓SDK 9.1+ IOS SDK 7.1+",
+  "version": "2.1.2",
+  "description": "cordova 集成友盟统计安卓SDK 9.4+ IOS SDK 7.3+",
   "cordova": {
     "id": "cordova-plugin-umengd",
     "platforms": [
