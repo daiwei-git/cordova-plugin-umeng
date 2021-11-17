@@ -81,10 +81,6 @@ public class UMPlugin extends CordovaPlugin {
                 Log.d("UMPlugin", "channelId 必须");
                 return false;
             }
-            if (deviceType.isEmpty()) {
-                Log.d("UMPlugin", "deviceType 必须");
-                return false;
-            }
             // 初始化
             //if (appKey.isEmpty() && channelId.isEmpty() ) {
             //  UMConfigure.init(mContext, deviceType, pushSecret);
