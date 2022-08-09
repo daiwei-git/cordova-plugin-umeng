@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
-<plugin id="cordova-plugin-umengd" version="2.1.5" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
-    <name>Umeng</name>
+<plugin id="cordova-plugin-umengsdk" version="2.1.5" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>UMSDK</name>
     <keywords>cordova,umeng,cordova-plugin,daiwei,友盟,友盟sdk,友盟统计</keywords>
     <description>cordova 集成友盟统计</description>
     <license>MIT</license>
-    <js-module src="www/Umeng.js" name="Umeng">
-        <clobbers target="Umeng" />
+    <js-module src="www/UMSDK.js" name="UMSDK">
+        <clobbers target="UMSDK" />
     </js-module>
     <!--<preference name="UMENG_APPKEY_ANDROID" />-->
     <!--<preference name="UMENG_CHANNEL_ANDROID" />-->

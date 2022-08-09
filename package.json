@@ -1,9 +1,9 @@
 {
-  "name": "@daiweinpm/cordova-plugin-umeng",
-  "version": "2.1.5",
+  "name": "@daiweinpm/cordova-plugin-umengsdk",
+  "version": "2.1.6",
   "description": "cordova 集成友盟统计安卓SDK 9.4+ IOS SDK 7.3+",
   "cordova": {
-    "id": "cordova-plugin-umeng",
+    "id": "cordova-plugin-umengsdk",
     "platforms": [
       "android",
       "ios"
@@ -15,8 +15,10 @@
   },
   "keywords": [
     "cordova",
-    "umeng",
     "cordova-plugin",
+    "cordova-plugin-umeng",
+    "umeng",
+    "umengsdk",
     "daiwei",
     "友盟",
     "友盟sdk",
