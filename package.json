@@ -3,7 +3,7 @@
   "version": "2.1.5",
   "description": "cordova 集成友盟统计安卓SDK 9.4+ IOS SDK 7.3+",
   "cordova": {
-    "id": "cordova-plugin-umengd",
+    "id": "cordova-plugin-umeng",
     "platforms": [
       "android",
       "ios"
