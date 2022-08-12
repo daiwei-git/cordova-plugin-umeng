@@ -6,8 +6,11 @@ repositories {
 
 dependencies {
     implementation fileTree(include:['*.jar'], dir:'libs')
-    // 下面各SDK根据宿主App是否使用相关业务按需引入。
-    implementation (name:'umeng-asms-armeabi-v1.4.1', ext:'aar')
-    implementation (name:'umeng-abtest-v1.0.0', ext:'aar')
-    implementation (name:'umeng-apm-armeabi-v1.5.2', ext:'aar')
+    // 统计
+    implementation (name:'umeng-asms-armeabi-v1.6.3', ext:'aar')
+    implementation (name:'umeng-abtest-v1.0.1', ext:'aar')
+    implementation (name:'umeng-apm-armeabi-v1.7.0', ext:'aar')
+    // 推送
+    implementation (name:'umeng-push-6.5.4', ext:'aar')
+    implementation (name:'umeng-agoo_tnet4android-3.1.14.10.2', ext:'aar')
 }

@@ -1,9 +1,9 @@
-# cordova-plugin-umengsdk
+# 说明
+友盟统计，友盟性能检测SDK，消息推送，由于隐私政策原因，默认自动收集已改为手动收集，请在适当的时候使用init函数初始化
 
-cordova 集成友盟统计安卓SDK 9.4+ IOS SDK 7.3+
-
-# 新版说明
-新增友盟自动化测试SDK，友盟性能检测SDK，由于隐私政策原因，默认自动收集已改为手动收集，请在适当的时候使用init函数初始化
+友盟统计 9.5.1
+友盟性能监控 1.7.0
+友盟消息推送 6.5.4
 
 # 安装
 
@@ -12,7 +12,7 @@ npm i @daiweinpm/cordova-plugin-umengsdk
 ```
 
 ```shell
-cordova plugin add @daiweinpm/cordova-plugin-umengsdk
+cordova plugin add @daiweinpm/cordova-plugin-umengsdk  --variable APPKEY=YOU_APPKEY
 ```
 
 ```shell
@@ -41,77 +41,61 @@ if (UMSDK) {
     * deviceType 设备类型，1 为手机、2 为盒子，默认为手机
     * pushSecret 推送密钥 Push 推送业务的secret
     */
-    UMSDK.init(appKey, channelId, deviceType, pushSecret);
+    UMSDK.init(appKey, channelId, deviceType, pushSecret): Promise<any>;
 
     /**
-     * eventId 统计微博应用中”转发”事件发生的次数，那么在转发的函数里调用
+     * 打开统计日志模式
      */
-    UMSDK.onEvent(eventId);
+    UMSDK.setLogEnabled(isOpen): Promise<any>;
+
+    /**
+     * logout 调用后，不再发送账号内容
+     * userId 用户ID
+     * provider 提供者（可选）
+     */
+    UMSDK.login(userId, provider): Promise<any>;
+
+    /**
+     * logout 调用后，不再发送账号内容
+     */
+    UMSDK.logout(): Promise<any>;
     
     /**
-     * eventId 统计微博应用中”转发”事件发生的次数，那么在转发的函数里调用
-     * label 不同的标签会分别进行统计，方便同一事件的不同标签的对比,为nil或空字符串时后台会生成和eventId同的标签。
+     * 设置采集模式
+     * mode auto = 自动（默认），manual = 手动
      */
-    UMSDK.onEventWithLabel(eventId, label);
+    UMSDK.setPageCollectionMode(mode): Promise<any>;
+    
+    /**
+     * 手动采集页面开始
+     * 必须配对调用onPageStart:和onPageEnd:两个函数来完成自动统计，若只调用某一个函数不会生成有效数据；
+     * 在该页面展示时调用onPageStart:，当退出该页面时调用onPageEnd。
+     */
+    UMSDK.onPageStart(Pagename): Promise<any>;
 
     /**
-     * eventId 统计微博应用中”转发”事件发生的次数，那么在转发的函数里调用
-     * attributes 属性中的key－value必须为String类型, 每个应用至多添加500个自定义事件，key不能超过100个 
-     */
-    UMSDK.onEventWithParameters(eventId, attributes);
-
-    /**
-     * eventId 统计微博应用中”转发”事件发生的次数，那么在转发的函数里调用
-     * attributes 属性中的key－value必须为String类型, 每个应用至多添加500个自定义事件，key不能超过100个
-     * counter 自定义数值
-     */
-    UMSDK.onEventWithCounter(eventId, attributes, counter);
-
-    /**
-     * 必须配对调用onPageBegin:和onPageEnd:两个函数来完成自动统计，若只调用某一个函数不会生成有效数据；
-     * 在该页面展示时调用onPageBegin:，当退出该页面时调用onPageEnd。
-     */
-    UMSDK.onPageBegin(Pagename);
-
-    /**
+     * 手动采集页面开始
      * 必须配对调用beginLogPageView:和onPageEnd:两个函数来完成自动统计，若只调用某一个函数不会生成有效数据；
      * 在该页面展示时调用beginLogPageView:，当退出该页面时调用onPageEnd。
      */
-    UMSDK.onPageEnd(Pagename);
+    UMSDK.onPageEnd(Pagename): Promise<any>;
 
     /**
-     * 获取设备ID
-     * callBack 回调函数
+     * 事件埋点
+     * name 事件名
+     * attributes 自定义参数
      */
-    UMSDK.getDeviceId(callBack);
+    UMSDK.onEvent(name, attributes: {}): Promise<any>;
+
+    /**
+     * 注册消息推送
+     */
+    UMSDK.registerPush(): Promise<any>;
 
     /**
      * 获取设备信息
      * callBack 回调函数
      */
-    UMSDK.getDeviceInfo(callBack);
-
-    /**
-     * 【友盟+】在统计用户时以设备为标准，如果需要统计应用自身的账号，可以使用此功能
-     * UserID 用户ID
-     */
-    UMSDK.profileSignInWithPUID(UserID);
-
-    /**
-     * 【友盟+】在统计用户时以设备为标准，如果需要统计应用自身的账号，可以使用此功能
-     * UserID 用户ID
-     * provider 不能以下划线”_”开头，使用大写字母和数字标识; 如果是上市公司，建议使用股票代码。
-     */
-    UMSDK.profileSignInWithPUIDWithProvider(UserID, provider);
-
-    /**
-     * Signoff调用后，不再发送账号内容
-     */
-    UMSDK.profileSignOff(); 
-
-    /**
-     * 打开统计SDK调试模式
-     */
-    UMSDK.setLogEnabled(true); 
+    UMSDK.getDeviceInfo(callBack): Promise<any>;
 }
 ```

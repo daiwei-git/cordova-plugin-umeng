@@ -1,14 +1,7 @@
-package com.umeng.plugin;
+package com.daiwei.umsdk.cdv;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
@@ -19,36 +12,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.umeng.analytics.MobclickAgent;
-import com.umeng.analytics.MobclickAgent.EScenarioType;
 import com.umeng.commonsdk.UMConfigure;
+import com.umeng.commonsdk.listener.OnGetOaidListener;
+import com.umeng.message.PushAgent;
+import com.umeng.message.api.UPushRegisterCallback;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.Log;
+import android.provider.Settings;
 
 public class UMPlugin extends CordovaPlugin {
 
     private Context mContext = null;
+    private CallbackContext callbackContext = null;
 
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
-
-        String appKey = webView.getPreferences().getString("umeng_appkey", "");
-        String channelId = webView.getPreferences().getString("umeng_channel", "");
-
-        Log.d("UMPlugin", "appkey:" + appKey);
-        Log.d("UMPlugin", "channelId:" + channelId);
-
         this.mContext = cordova.getActivity().getApplicationContext();
-        // 预初始化
-        // UMConfigure.preInit(mContext, appKey, channelId);
-        // 初始化
-        //UMConfigure.init(mContext, appKey, channelId, UMConfigure.DEVICE_TYPE_PHONE, "");
-        // 页面采集模式
-        //MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
-        // 普通模式
-        //MobclickAgent.setScenarioType(mContext, EScenarioType.E_UM_NORMAL);
     }
 
     @Override
@@ -67,265 +48,273 @@ public class UMPlugin extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-        Log.d("UMPlugin", "execute action:" + action);
-        if (action.equals("init")) {
-            String appKey = args.getString(0);
-            String channelId = args.getString(1);
-            Integer deviceType = args.getInt(2);
-            String pushSecret = args.getString(3);
-            if (appKey.isEmpty()) {
-                Log.d("UMPlugin", "appKey 必须");
-                return false;
-            }
-            if (channelId.isEmpty()) {
-                Log.d("UMPlugin", "channelId 必须");
-                return false;
-            }
-            // 初始化
-            //if (appKey.isEmpty() && channelId.isEmpty() ) {
-            //  UMConfigure.init(mContext, deviceType, pushSecret);
-            //} else {
-            //  UMConfigure.init(mContext, appKey, channelId, deviceType, pushSecret);
-            //}
-            // 初始化
-            UMConfigure.init(mContext, appKey, channelId, deviceType, pushSecret);
-            // 页面采集模式
-            MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
-            // 普通模式
-            MobclickAgent.setScenarioType(mContext, EScenarioType.E_UM_NORMAL);
-            MobclickAgent.onResume(mContext);
-            return true;
-        } else if (action.equals("onEvent")) {
-            return onEvent(args, mContext);
-        } else if (action.equals("onEventWithLabel")) {
-            return onEventWithLabel(args, mContext);
-        } else if (action.equals("onEventWithParameters")) {
-            return onEventWithParameters(args, mContext);
-        } else if (action.equals("onEventWithCounter")) {
-            return onEventWithCounter(args, mContext);
-        } else if (action.equals("onPageBegin")) {
-            return onPageBegin(args);
-        } else if (action.equals("onPageEnd")) {
-            return onPageEnd(args);
-        } else if (action.equals("getDeviceId")) {
-            try {
-                String deviceId = getDeviceId(mContext);
-                callbackContext.success(deviceId);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return true;
+        this.callbackContext = callbackContext;
+        if (action.equals("preInit")) {
+            return preInit(args);
+        } else if (action.equals("init")) {
+            return init(args);
+        } else if (action.equals("getOaid")) {
+            return getOaid(args);
+        } else if (action.equals("onKillProcess")) {
+            return onKillProcess(args);
         } else if(action.equals("getDeviceInfo")) {
-          try {
-              String deviceInfo = getDeviceInfo(mContext);
-              callbackContext.success(deviceInfo);
-          } catch (Exception e) {
-              e.printStackTrace();
-          }
-          return true;
+            return getDeviceInfo(args);
         } else if (action.equals("setLogEnabled")) {
             return setLogEnabled(args);
-        } else if (action.equals("profileSignInWithPUID")) {
-            return profileSignInWithPUID(args);
-        } else if (action.equals("profileSignInWithPUIDWithProvider")) {
-            return profileSignInWithPUIDWithProvider(args);
-        } else if (action.equals("profileSignOff")) {
-            return profileSignOff();
-        } else if (action.equals("profileSignOff")) {
-            return profileSignOff();
+        } else if (action.equals("login")) {
+            return login(args);
+        } else if (action.equals("logout")) {
+            return logout(args);
+        } else if (action.equals("setPageCollectionMode")) {
+            return setPageCollectionMode(args);
+        } else if (action.equals("onPageStart")) {
+            return onPageStart(args);
+        } else if (action.equals("onPageEnd")) {
+            return onPageEnd(args);
+        } else if (action.equals("onEvent")) {
+            return onEvent(args);
+        } else if (action.equals("registerPush")) {
+            return registerPush(args);
         }
         return false;
     }
 
-    private boolean onEvent(JSONArray args, Context context) {
+    /**
+    预初始化
+     */
+    private boolean preInit(JSONArray args) {
         try {
-            String eventId = args.getString(0);
-            MobclickAgent.onEvent(context, eventId);
-        } catch (JSONException e) {
+            String appKey = args.getString(0);
+            String channelId = args.getString(1);
+            UMConfigure.preInit(mContext, appKey, channelId);
+//            PushHelper.preInit(mContext);
+            callbackContext.success();
+        } catch (Exception e) {
+            callbackContext.error(e.getMessage());
             return false;
         }
         return true;
     }
 
-    private boolean onEventWithLabel(JSONArray args, Context context) {
+    /**
+    初始化
+     */
+    private boolean init(JSONArray args) {
         try {
-            String eventId = args.getString(0);
-            String label = args.getString(1);
-            MobclickAgent.onEvent(context, eventId, label);
-        } catch (JSONException e) {
+            String appKey = args.getString(0);
+            String channelId = args.getString(1);
+            Integer deviceType = args.getInt(2);
+            String pushSecret = args.getString(3);
+            // 初始化
+            UMConfigure.init(mContext, appKey, channelId, deviceType, pushSecret);
+            // 页面采集模式
+            MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
+            callbackContext.success();
+        } catch (Exception e) {
+            callbackContext.error(e.getMessage());
             return false;
         }
         return true;
     }
 
-    private boolean onEventWithParameters(JSONArray args, Context context) {
+    /**
+    获得oaid
+     */
+    private boolean getOaid(JSONArray args) {
         try {
-            String eventId = args.getString(0);
-            JSONObject obj = args.getJSONObject(1);
-            Map<String, String> map = new HashMap<String, String>();
-            Iterator<String> it = obj.keys();
-            while (it.hasNext()) {
-                String key = String.valueOf(it.next());
-                Object o = obj.get(key);
-                if (o instanceof Integer) {
-                    String value = String.valueOf(o);
-                    map.put(key, value);
-                } else if (o instanceof String) {
-                    String strValue = (String) o;
-                    map.put(key, strValue);
+            UMConfigure.getOaid(mContext,new OnGetOaidListener() {
+                @Override
+                public void onGetOaid(String oaid) {
+                    callbackContext.success(oaid);
                 }
-            }
-            MobclickAgent.onEvent(context, eventId, map);
-        } catch (JSONException e) {
+            });
+            callbackContext.success();
+        } catch (Exception e) {
+            callbackContext.error(e.getMessage());
             return false;
         }
         return true;
     }
 
-    private boolean onEventWithCounter(JSONArray args, Context context) {
+    /**
+    程序退出时，用于保存统计数据的API
+    */
+    private boolean onKillProcess(JSONArray args) {
         try {
-            String eventId = args.getString(0);
-            JSONObject obj = args.getJSONObject(1);
-            Map<String, String> map = new HashMap<String, String>();
-            Iterator<String> it = obj.keys();
-            while (it.hasNext()) {
-                String key = String.valueOf(it.next());
-                Object o = obj.get(key);
-                if (o instanceof Integer) {
-                    String value = String.valueOf(o);
-                    map.put(key, value);
-                } else if (o instanceof String) {
-                    String strValue = (String) o;
-                    map.put(key, strValue);
-                }
-            }
-            int value = args.getInt(2);
-            MobclickAgent.onEventValue(context, eventId, map, value);
-        } catch (JSONException e) {
+            MobclickAgent.onKillProcess(mContext);
+            callbackContext.success();
+        } catch (Exception e) {
+            callbackContext.error(e.getMessage());
             return false;
         }
         return true;
     }
 
-    private boolean onPageBegin(JSONArray args) {
-        try {
-            String pageName = args.getString(0);
-            MobclickAgent.onPageStart(pageName);
-        } catch (JSONException e) {
-            return false;
-        }
-        return true;
-    }
-
-    private boolean onPageEnd(JSONArray args) {
-        try {
-            String pageName = args.getString(0);
-            MobclickAgent.onPageEnd(pageName);
-        } catch (JSONException e) {
-            return false;
-        }
-        return true;
-    }
-
+    /**
+    设置日志模式
+     */
     private boolean setLogEnabled(JSONArray args) {
         try {
             boolean enabled = args.getBoolean(0);
             UMConfigure.setLogEnabled(enabled);
-        } catch (JSONException e) {
+            callbackContext.success();
+        } catch (Exception e) {
+            callbackContext.error(e.getMessage());
             return false;
         }
         return true;
     }
 
-    private boolean profileSignInWithPUID(JSONArray args) {
+    /**
+    用户登录
+     */
+    private boolean login(JSONArray args) {
         try {
-            String puid = args.getString(0);
-            MobclickAgent.onProfileSignIn(puid);
-        } catch (JSONException e) {
+            String userId = args.getString(0);
+            String platform = args.getString(1);
+            if (platform.length() == 0) {
+                MobclickAgent.onProfileSignIn(userId);
+            } else {
+                MobclickAgent.onProfileSignIn(platform, userId);
+            }
+            callbackContext.success();
+        } catch (Exception e) {
+            callbackContext.error(e.getMessage());
             return false;
         }
         return true;
     }
 
-    private boolean profileSignInWithPUIDWithProvider(JSONArray args) {
-        try {
-            String puid = args.getString(0);
-            String provider = args.getString(1);
-            MobclickAgent.onProfileSignIn(puid, provider);
-        } catch (JSONException e) {
-            return false;
-        }
-        return true;
-    }
-
-    private boolean profileSignOff() {
+    /**
+    用户登出
+     */
+    private boolean logout(JSONArray args) {
         try {
             MobclickAgent.onProfileSignOff();
+            callbackContext.success();
+        } catch (Exception e) {
+            callbackContext.error(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+    设置页面采集模式
+     */
+    private boolean setPageCollectionMode(JSONArray args) {
+        try {
+            String mode = args.getString(0);
+            if (mode.equals("auto")) {
+                // 自动采集选择
+                MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
+            } else if (mode.equals("manual")) {
+                // 手动采集选择
+                MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.MANUAL);
+            }
+            callbackContext.success();
+        } catch (Exception e) {
+            callbackContext.error(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+    手动采集页面开始
+     */
+    private boolean onPageStart(JSONArray args) {
+        try {
+            String pageName = args.getString(0);
+            MobclickAgent.onPageStart(pageName);
+            callbackContext.success();
+        } catch (Exception e) {
+            callbackContext.error(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+    手动采集页面结束
+     */
+    private boolean onPageEnd(JSONArray args) {
+        try {
+            String pageName = args.getString(0);
+            MobclickAgent.onPageEnd(pageName);
+            callbackContext.success();
+        } catch (Exception e) {
+            callbackContext.error(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+    手动采集页面结束
+     */
+    private boolean onEvent(JSONArray args) {
+        try {
+            String name = args.getString(0);
+            Map<String, Object> map = (Map) args.getJSONObject(1);
+            MobclickAgent.onEventObject(mContext, name, map);
+            callbackContext.success();
+        } catch (Exception e) {
+            callbackContext.error(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+    注册推送获得推送设备token
+     */
+    private boolean registerPush(JSONArray args) {
+        try {
+            PushAgent.getInstance(mContext).register(new UPushRegisterCallback() {
+                @Override
+                public void onSuccess(String deviceToken) {
+                    callbackContext.success(deviceToken);
+                }
+                @Override
+                public void onFailure(String errCode, String errDesc) {
+                    callbackContext.error(errDesc);
+                }
+            });
         } catch (Exception e) {
             return false;
         }
         return true;
     }
 
-    private String getDeviceId(Context context) {
+    /**
+    获取设备基本信息
+     */
+    private boolean getDeviceInfo(JSONArray args) {
         try {
-            android.telephony.TelephonyManager tm = (android.telephony.TelephonyManager) context
-                            .getSystemService(Context.TELEPHONY_SERVICE);
-            String deviceId = tm.getDeviceId();
-            return deviceId;
+            String uuid = Settings.Secure.getString(this.cordova.getActivity().getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+            String model = android.os.Build.MODEL;
+//            String productname = android.os.Build.PRODUCT;
+            String manufacturer = android.os.Build.MANUFACTURER;
+            String serial = android.os.Build.SERIAL;
+            String osversion = android.os.Build.VERSION.RELEASE;
+//            String sdkversion = android.os.Build.VERSION.SDK;
+            TimeZone tz = TimeZone.getDefault();
+            Boolean isVirtual = android.os.Build.FINGERPRINT.contains("generic") || android.os.Build.PRODUCT.contains("sdk");
+            String platform = android.os.Build.MANUFACTURER.equals("Amazon") ? "amazon-fireos" : "Android";
+            JSONObject json = new JSONObject();
+            json.put("uuid", uuid);
+            json.put("version", osversion);
+            json.put("platform", platform);
+            json.put("model", model);
+            json.put("manufacturer", manufacturer);
+	          json.put("isVirtual", isVirtual);
+            json.put("serial", serial);
+            this.callbackContext.success(json);
         } catch (Exception e) {
-            e.printStackTrace();
+            callbackContext.error(e.getMessage());
+            return false;
         }
-        return null;
-    }
-
-    private String getDeviceInfo(Context context) {
-        try {
-            org.json.JSONObject json = new org.json.JSONObject();
-            String deviceId = getDeviceId(context);
-            String mac = null;
-            FileReader fstream = null;
-            try {
-                fstream = new FileReader("/sys/class/net/wlan0/address");
-            } catch (FileNotFoundException e) {
-                fstream = new FileReader("/sys/class/net/eth0/address");
-            }
-            BufferedReader in = null;
-            if (fstream != null) {
-                try {
-                    in = new BufferedReader(fstream, 1024);
-                    mac = in.readLine();
-                } catch (IOException e) {
-                } finally {
-                    if (fstream != null) {
-                        try {
-                            fstream.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    if (in != null) {
-                        try {
-                            in.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-            json.put("mac", mac);
-            if (TextUtils.isEmpty(deviceId)) {
-                deviceId = mac;
-            }
-            if (TextUtils.isEmpty(deviceId)) {
-                deviceId = android.provider.Settings.Secure.getString(context.getContentResolver(),
-                        android.provider.Settings.Secure.ANDROID_ID);
-            }
-            json.put("device_id", deviceId);
-            return json.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        return true;
     }
 }

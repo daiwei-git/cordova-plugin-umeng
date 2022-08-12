@@ -1,3 +1,7 @@
+#include <sys/types.h>
+#include <sys/sysctl.h>
+#include "TargetConditionals.h"
+
 #import "UMPlugin.h"
 // COMMON
 #import <UMCommon/UMCommon.h>
@@ -16,29 +20,33 @@
 // UTDID
 #import <UTDID/UTDevice.h>
 
-@interface UMPlugin ()
-
-#if __has_feature(objc_arc)
-@property (nonatomic, strong) NSString *currPageName;
+@implementation UIDevice (ModelVersion)
+- (NSString*)modelVersion
+{
+#if TARGET_IPHONE_SIMULATOR
+    NSString* platform = NSProcessInfo.processInfo.environment[@"SIMULATOR_MODEL_IDENTIFIER"];
 #else
-@property (nonatomic, retain) NSString *currPageName;
-#endif
+    size_t size;
 
+    sysctlbyname("hw.machine", NULL, &size, NULL, 0);
+    char* machine = malloc(size);
+    sysctlbyname("hw.machine", machine, &size, NULL, 0);
+    NSString* platform = [NSString stringWithUTF8String:machine];
+    free(machine);
+#endif
+    return platform;
+}
 @end
 
 @implementation UMPlugin
 
-#if __has_feature(objc_arc)
-#else
-- (void)dealloc {
-    [super dealloc];
-}
-#endif
-
 - (void)pluginInitialize {
-    // NSString* appKey = [[self.commandDelegate settings] objectForKey:@"umeng_appkey"];
-    // NSString* channelId = [[self.commandDelegate settings] objectForKey:@"umeng_channel"];
-    // [UMConfigure initWithAppkey: appKey channel: channelId];
+
+}
+
+- (void)preInit:(CDVInvokedUrlCommand*)command {
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void)init:(CDVInvokedUrlCommand*)command {
@@ -51,77 +59,11 @@
         channelId = nil;
     }
     [UMConfigure initWithAppkey: appKey channel: channelId];
-}
-
-- (void)getDeviceId:(CDVInvokedUrlCommand*)command {
-    NSString *deviceId = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:deviceId];
+    [UMCommonLogManager setUpUMCommonLogManager];
+    [UMConfigure setEncryptEnabled:YES];//打开加密传输
+    [MobClick setAutoPageEnabled:YES];
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-}
-
-- (void)onEvent:(CDVInvokedUrlCommand*)command {
-    NSString *eventId = [command.arguments objectAtIndex:0];
-    if (eventId == nil || [eventId isKindOfClass:[NSNull class]]) {
-        return;
-    }
-    [MobClick event:eventId];
-}
-
-- (void)onEventWithLabel:(CDVInvokedUrlCommand*)command{
-    NSString *eventId = [command.arguments objectAtIndex:0];
-    if (eventId == nil || [eventId isKindOfClass:[NSNull class]]) {
-        return;
-    }
-    NSString *eventLabel = [command.arguments objectAtIndex:1];
-    if ([eventLabel isKindOfClass:[NSNull class]]) {
-        eventLabel = nil;
-    }
-    [MobClick event:eventId label:eventLabel];
-}
-
-- (void)onEventWithParameters:(CDVInvokedUrlCommand*)command {
-    NSString *eventId = [command.arguments objectAtIndex:0];
-    if (eventId == nil || [eventId isKindOfClass:[NSNull class]]) {
-        return;
-    }
-    NSDictionary *parameters = [command.arguments objectAtIndex:1];
-    if (parameters == nil && [parameters isKindOfClass:[NSNull class]]) {
-        parameters = nil;
-    }
-    [MobClick event:eventId attributes:parameters];
-}
-
-- (void)onEventWithCounter:(CDVInvokedUrlCommand*)command {
-    NSString *eventId = [command.arguments objectAtIndex:0];
-    if (eventId == nil || [eventId isKindOfClass:[NSNull class]]) {
-        return;
-    }
-    NSDictionary *parameters = [command.arguments objectAtIndex:1];
-    if (parameters == nil && [parameters isKindOfClass:[NSNull class]]) {
-        parameters = nil;
-    }
-    NSString *eventNum = [command.arguments objectAtIndex:2];
-    if (eventNum == nil && [eventNum isKindOfClass:[NSNull class]]) {
-        eventNum = nil;
-    }
-    int num = [eventNum intValue];
-    [MobClick event:eventId attributes:parameters counter:num];
-}
-
-- (void)onPageBegin:(CDVInvokedUrlCommand*)command {
-    NSString *pageName = [command.arguments objectAtIndex:0];
-    if (pageName == nil || [pageName isKindOfClass:[NSNull class]]) {
-        return;
-    }
-    [MobClick beginLogPageView:pageName];
-}
-
-- (void)onPageEnd:(CDVInvokedUrlCommand*)command {
-    NSString *pageName = [command.arguments objectAtIndex:0];
-    if (pageName == nil || [pageName isKindOfClass:[NSNull class]]) {
-        return;
-    }
-    [MobClick endLogPageView:pageName];
 }
 
 - (void)setLogEnabled:(CDVInvokedUrlCommand*)command {
@@ -130,31 +72,119 @@
         return;
     }
     BOOL enabled = [arg0 boolValue];
-    [UMConfigure setLogEnabled:enabled];
+    [UMConfigure setLogEnabled:enabled];//设置打开日志
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
-- (void)profileSignInWithPUID:(CDVInvokedUrlCommand*)command  {
+- (void)onKillProcess:(CDVInvokedUrlCommand*)command {
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)getOaid:(CDVInvokedUrlCommand*)command {
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)login:(CDVInvokedUrlCommand*)command  {
     NSString *puid = [command.arguments objectAtIndex:0];
     if (puid == nil || [puid isKindOfClass:[NSNull class]]) {
         return;
     }
-    [MobClick profileSignInWithPUID:puid];
+    NSString *platformName = [command.arguments objectAtIndex:1];
+    if (platformName == nil) {
+        [MobClick profileSignInWithPUID: puid];
+    } else {
+        [MobClick profileSignInWithPUID:puid provider:platformName];
+    }
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
-- (void)profileSignInWithPUIDWithProvider:(CDVInvokedUrlCommand*)command {
-    NSString *puid = [command.arguments objectAtIndex:0];
-    if (puid == nil || [puid isKindOfClass:[NSNull class]]) {
-        return;
-    }
-    NSString *provider = [command.arguments objectAtIndex:1];
-    if (provider == nil && [provider isKindOfClass:[NSNull class]]) {
-        provider = nil;
-    }
-    [MobClick profileSignInWithPUID:puid provider:provider];
-}
-
-- (void)profileSignOff:(NSArray *)arguments {
+- (void)logout:(CDVInvokedUrlCommand*)command  {
     [MobClick profileSignOff];
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)setPageCollectionMode:(CDVInvokedUrlCommand*)command  {
+    NSString *mode = [command.arguments objectAtIndex:0];
+    if ([mode isEqualToString: @"auto"]) {
+        [MobClick setAutoPageEnabled:YES];
+    } else {
+        [MobClick setAutoPageEnabled:NO];
+    }
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)onPageStart:(CDVInvokedUrlCommand*)command  {
+    NSString *pageName = [command.arguments objectAtIndex:0];
+    [MobClick beginLogPageView: pageName]; //("Pagename"为页面名称，可自定义)
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)onPageEnd:(CDVInvokedUrlCommand*)command  {
+    NSString *pageName = [command.arguments objectAtIndex:0];
+    [MobClick endLogPageView: pageName]; //("Pagename"为页面名称，可自定义)
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)onEvent:(CDVInvokedUrlCommand*)command {
+    NSString *name = [command.arguments objectAtIndex:0];
+    NSDictionary *data = [command.arguments objectAtIndex:1];
+    if ([data count] == 0) {
+        [MobClick event: name];
+    } else {
+        [MobClick event: name attributes: data];
+    }
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)registerPush:(CDVInvokedUrlCommand*)command {
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)getDeviceInfo:(CDVInvokedUrlCommand*)command {
+    UIDevice* device = [UIDevice currentDevice];
+
+    int isVirtual = 0;
+    #if TARGET_OS_SIMULATOR
+        isVirtual = 1;
+    #elif TARGET_IPHONE_SIMULATOR
+        isVirtual = 1;
+    #endif
+
+    NSUserDefaults* userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString* app_uuid = [userDefaults stringForKey:@"CDVUUID"];
+    if (app_uuid == nil) {
+        if ([device respondsToSelector:@selector(identifierForVendor)]) {
+            app_uuid = [[device identifierForVendor] UUIDString];
+        } else {
+            CFUUIDRef uuid = CFUUIDCreate(NULL);
+            app_uuid = (__bridge_transfer NSString *)CFUUIDCreateString(NULL, uuid);
+            CFRelease(uuid);
+        }
+        [userDefaults setObject:app_uuid forKey:@"CDVUUID"];
+        [userDefaults synchronize];
+    }
+
+    NSDictionary *deviceInfo = @{
+        @"manufacturer": @"Apple",
+        @"model": [device modelVersion],
+        @"platform": @"iOS",
+        @"version": [device systemVersion],
+        @"uuid": app_uuid,
+        @"cordova": CDV_VERSION,
+        @"isVirtual": [NSNumber numberWithInt: isVirtual]
+    };
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:deviceInfo];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 @end

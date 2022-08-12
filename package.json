@@ -1,7 +1,7 @@
 {
   "name": "@daiweinpm/cordova-plugin-umengsdk",
-  "version": "2.1.8",
-  "description": "cordova 集成友盟统计安卓SDK 9.4+ IOS SDK 7.3+",
+  "version": "3.0.0",
+  "description": "友盟统计 9.5.1 友盟性能监控 1.7.0 友盟消息推送 6.5.4",
   "cordova": {
     "id": "cordova-plugin-umengsdk",
     "platforms": [
@@ -22,7 +22,9 @@
     "daiwei",
     "友盟",
     "友盟sdk",
-    "友盟统计"
+    "友盟统计",
+    "友盟应用性能分析",
+    "友盟消息推送"
   ],
   "author": "daiwei-git",
   "license": "MIT",

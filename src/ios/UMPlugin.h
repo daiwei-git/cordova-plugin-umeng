@@ -3,16 +3,18 @@
 
 @interface UMPlugin : CDVPlugin
 
-- (void)getDeviceId:(CDVInvokedUrlCommand*)command;
-- (void)onEvent:(CDVInvokedUrlCommand*)command;
-- (void)onEventWithLabel:(CDVInvokedUrlCommand*)command;
-- (void)onEventWithParameters:(CDVInvokedUrlCommand*)command;
-- (void)onEventWithCounter:(CDVInvokedUrlCommand*)command;
-- (void)onPageBegin:(CDVInvokedUrlCommand*)command;
-- (void)onPageEnd:(CDVInvokedUrlCommand*)command;
+- (void)preInit:(CDVInvokedUrlCommand*)command;
+- (void)init:(CDVInvokedUrlCommand*)command;
 - (void)setLogEnabled:(CDVInvokedUrlCommand*)command;
-- (void)profileSignInWithPUID:(CDVInvokedUrlCommand*)command;
-- (void)profileSignInWithPUIDWithProvider:(CDVInvokedUrlCommand*)command;
-- (void)profileSignOff:(NSArray *)arguments;
+- (void)onKillProcess:(CDVInvokedUrlCommand*)command;
+- (void)getOaid:(CDVInvokedUrlCommand*)command;
+- (void)login:(CDVInvokedUrlCommand*)command;
+- (void)logout:(CDVInvokedUrlCommand*)command;
+- (void)setPageCollectionMode:(CDVInvokedUrlCommand*)command;
+- (void)onPageStart:(CDVInvokedUrlCommand*)command;
+- (void)onPageEnd:(CDVInvokedUrlCommand*)command;
+- (void)onEvent:(CDVInvokedUrlCommand*)command;
+- (void)registerPush:(CDVInvokedUrlCommand*)command;
+- (void)getDeviceInfo:(CDVInvokedUrlCommand*)command;
 
 @end
