@@ -35,14 +35,12 @@ public class UMPlugin extends CordovaPlugin {
     @Override
     public void onResume(boolean multitasking) {
         super.onResume(multitasking);
-        Log.d("UMPlugin", "onResume");
         MobclickAgent.onResume(mContext);
     }
 
     @Override
     public void onPause(boolean multitasking) {
         super.onPause(multitasking);
-        Log.d("UMPlugin", "onPause");
         MobclickAgent.onPause(mContext);
     }
 

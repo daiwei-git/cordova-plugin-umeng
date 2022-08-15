@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<plugin id="cordova-plugin-umengsdk" version="3.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+<plugin id="cordova-plugin-umengsdk" version="3.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
     <name>UMSDK</name>
     <keywords>cordova,umeng,cordova-plugin,daiwei,友盟,友盟sdk,友盟统计,友盟应用性能分析,友盟消息推送</keywords>
     <description>友盟统计 9.5.1 友盟性能监控 1.7.0 友盟消息推送 6.5.4</description>
