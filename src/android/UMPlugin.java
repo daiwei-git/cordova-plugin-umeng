@@ -1,14 +1,7 @@
-package com.umeng.plugin;
+package com.daiwei.umsdk.cdv;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
@@ -19,30 +12,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.umeng.analytics.MobclickAgent;
-import com.umeng.analytics.MobclickAgent.EScenarioType;
-import com.umeng.analytics.MobclickAgent.UMAnalyticsConfig;
-import com.umeng.analytics.game.UMGameAgent;
+import com.umeng.commonsdk.UMConfigure;
+import com.umeng.commonsdk.listener.OnGetOaidListener;
+import com.umeng.message.PushAgent;
+import com.umeng.message.api.UPushRegisterCallback;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.Log;
+import android.provider.Settings;
 
 public class UMPlugin extends CordovaPlugin {
-    private Context mContext = null;
-    /**
-     * 可以设置是否为游戏，如果是游戏会进行初始化
-     */
-    private boolean isGameInited = false;
 
-    /**
-     * 初始化游戏
-     */
-    private void initGame() {
-        UMGameAgent.init(mContext);
-        UMGameAgent.setPlayerLevel(1);
-        MobclickAgent.setScenarioType(mContext, EScenarioType.E_UM_GAME);
-        isGameInited = true;
-    }
+    private Context mContext = null;
+    private CallbackContext callbackContext = null;
 
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
@@ -53,274 +35,284 @@ public class UMPlugin extends CordovaPlugin {
     @Override
     public void onResume(boolean multitasking) {
         super.onResume(multitasking);
-        Log.d("UMPlugin", "onResume");
         MobclickAgent.onResume(mContext);
     }
 
     @Override
     public void onPause(boolean multitasking) {
         super.onPause(multitasking);
-        Log.d("UMPlugin", "onPause");
         MobclickAgent.onPause(mContext);
     }
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-        Log.d("UMPlugin", "execute action:" + action);
-        if (action.equals("init")) {
-            String appKey = args.getString(0);
-            String channelId = args.getString(1);
-            MobclickAgent.startWithConfigure(new UMAnalyticsConfig(mContext, appKey, channelId));
-            MobclickAgent.setScenarioType(mContext, EScenarioType.E_UM_NORMAL);
-            MobclickAgent.onResume(mContext);
-            return true;
-        } else if (action.equals("onCCEvent")) {
-            JSONArray array = args.getJSONArray(0);
-            List<String> ck = new ArrayList<String>();
-            for (int i = 0; i < array.length(); i++) {
-                ck.add(array.getString(i));
-            }
-            int value = args.getInt(1);
-            String label = args.getString(2);
-            MobclickAgent.onEvent(mContext, ck, value, label);
-            return true;
-        } else if (action.equals("onEvent")) {
-            String eventId = args.getString(0);
-            MobclickAgent.onEvent(mContext, eventId);
-            return true;
-        } else if (action.equals("onEventWithLabel")) {
-            String eventId = args.getString(0);
-            String label = args.getString(1);
-            MobclickAgent.onEvent(mContext, eventId, label);
-            return true;
-        } else if (action.equals("onEventWithParameters")) {
-            String eventId = args.getString(0);
-            JSONObject obj = args.getJSONObject(1);
-            Map<String, String> map = new HashMap<String, String>();
-            Iterator<String> it = obj.keys();
-            while (it.hasNext()) {
-                String key = String.valueOf(it.next());
-                Object o = obj.get(key);
-                if (o instanceof Integer) {
-                    String value = String.valueOf(o);
-                    map.put(key, value);
-                } else if (o instanceof String) {
-                    String strValue = (String) o;
-                    map.put(key, strValue);
-                }
-            }
-            MobclickAgent.onEvent(mContext, eventId, map);
-            return true;
-        } else if (action.equals("onEventWithCounter")) {
-            String eventId = args.getString(0);
-            JSONObject obj = args.getJSONObject(1);
-            Map<String, String> map = new HashMap<String, String>();
-            Iterator<String> it = obj.keys();
-            while (it.hasNext()) {
-                String key = String.valueOf(it.next());
-                Object o = obj.get(key);
-                if (o instanceof Integer) {
-                    String value = String.valueOf(o);
-                    map.put(key, value);
-                } else if (o instanceof String) {
-                    String strValue = (String) o;
-                    map.put(key, strValue);
-                }
-            }
-            int value = args.getInt(2);
-            MobclickAgent.onEventValue(mContext, eventId, map, value);
-            return true;
-        } else if (action.equals("onPageBegin")) {
-            String pageName = args.getString(0);
-            MobclickAgent.onPageStart(pageName);
-            return true;
-        } else if (action.equals("onPageEnd")) {
-            String pageName = args.getString(0);
-            MobclickAgent.onPageEnd(pageName);
-            return true;
-        } else if (action.equals("getDeviceId")) {
-            try {
-                android.telephony.TelephonyManager tm = (android.telephony.TelephonyManager) mContext
-                        .getSystemService(Context.TELEPHONY_SERVICE);
-                String deviceId = tm.getDeviceId();
-                callbackContext.success(deviceId);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return true;
+        this.callbackContext = callbackContext;
+        if (action.equals("preInit")) {
+            return preInit(args);
+        } else if (action.equals("init")) {
+            return init(args);
+        } else if (action.equals("getOaid")) {
+            return getOaid(args);
+        } else if (action.equals("onKillProcess")) {
+            return onKillProcess(args);
         } else if(action.equals("getDeviceInfo")) {
-          try {
-              String deviceInfo = getDeviceInfo(mContext);
-              callbackContext.success(deviceInfo);
-          } catch (Exception e) {
-              e.printStackTrace();
-          }
-          return true;
+            return getDeviceInfo(args);
         } else if (action.equals("setLogEnabled")) {
-            boolean enabled = args.getBoolean(0);
-            MobclickAgent.setDebugMode(enabled);
-            return true;
-        } else if (action.equals("profileSignInWithPUID")) {
-            String puid = args.getString(0);
-            MobclickAgent.onProfileSignIn(puid);
-            return true;
-        } else if (action.equals("profileSignInWithPUIDWithProvider")) {
-            String puid = args.getString(0);
-            String provider = args.getString(1);
-            MobclickAgent.onProfileSignIn(puid, provider);
-            return true;
-        } else if (action.equals("profileSignOff")) {
-            MobclickAgent.onProfileSignOff();
-            return true;
-        } else if (action.equals("setUserLevelId")) {
-            if (!isGameInited) {
-                initGame();
-            }
-            int level = args.getInt(0);
-            UMGameAgent.setPlayerLevel(level);
-            return true;
-        } else if (action.equals("startLevel")) {
-            if (!isGameInited) {
-                initGame();
-            }
-            String level = args.getString(0);
-            UMGameAgent.startLevel(level);
-            return true;
-        } else if (action.equals("finishLevel")) {
-            if (!isGameInited) {
-                initGame();
-            }
-            String level = args.getString(0);
-            UMGameAgent.failLevel(level);
-            return true;
-        } else if (action.equals("failLevel")) {
-            if (!isGameInited) {
-                initGame();
-            }
-            String level = args.getString(0);
-            UMGameAgent.finishLevel(level);
-
-            return true;
-        } else if (action.equals("exchange")) {
-            if (!isGameInited) {
-                initGame();
-            }
-            double currencyAmount = args.getDouble(0);
-            String currencyType = args.getString(1);
-            double virtualAmount = args.getDouble(2);
-            int channel = args.getInt(3);
-            String orderId = args.getString(4);
-            UMGameAgent.exchange(currencyAmount, currencyType, virtualAmount, channel, orderId);
-            return true;
-        } else if (action.equals("pay")) {
-            if (!isGameInited) {
-                initGame();
-            }
-            double money = args.getDouble(0);
-            double coin = args.getDouble(1);
-            int source = args.getInt(2);
-            UMGameAgent.pay(money, coin, source);
-            return true;
-        } else if (action.equals("payWithItem")) {
-            if (!isGameInited) {
-                initGame();
-            }
-            double money = args.getDouble(0);
-            String item = args.getString(1);
-            int number = args.getInt(2);
-            double price = args.getDouble(3);
-            int source = args.getInt(4);
-            UMGameAgent.pay(money, item, number, price, source);
-            return true;
-        } else if (action.equals("buy")) {
-            if (!isGameInited) {
-                initGame();
-            }
-            String item = args.getString(0);
-            int number = args.getInt(1);
-            double price = args.getDouble(2);
-            UMGameAgent.buy(item, number, price);
-            return true;
-        } else if (action.equals("use")) {
-            if (!isGameInited) {
-                initGame();
-            }
-            String item = args.getString(0);
-            int number = args.getInt(1);
-            double price = args.getDouble(2);
-            UMGameAgent.use(item, number, price);
-            return true;
-        } else if (action.equals("bonus")) {
-            if (!isGameInited) {
-                initGame();
-            }
-            double coin = args.getDouble(0);
-            int source = args.getInt(1);
-            UMGameAgent.bonus(coin, source);
-            return true;
-        } else if (action.equals("bonusWithItem")) {
-            if (!isGameInited) {
-                initGame();
-            }
-            String item = args.getString(0);
-            int number = args.getInt(1);
-            double price = args.getDouble(2);
-            int source = args.getInt(3);
-            UMGameAgent.bonus(item, number, price, source);
-            return true;
+            return setLogEnabled(args);
+        } else if (action.equals("login")) {
+            return login(args);
+        } else if (action.equals("logout")) {
+            return logout(args);
+        } else if (action.equals("setPageCollectionMode")) {
+            return setPageCollectionMode(args);
+        } else if (action.equals("onPageStart")) {
+            return onPageStart(args);
+        } else if (action.equals("onPageEnd")) {
+            return onPageEnd(args);
+        } else if (action.equals("onEvent")) {
+            return onEvent(args);
+        } else if (action.equals("registerPush")) {
+            return registerPush(args);
         }
         return false;
     }
 
-    private String getDeviceInfo(Context context) {
+    /**
+    预初始化
+     */
+    private boolean preInit(JSONArray args) {
         try {
-            org.json.JSONObject json = new org.json.JSONObject();
-            android.telephony.TelephonyManager tm = (android.telephony.TelephonyManager) context
-                    .getSystemService(Context.TELEPHONY_SERVICE);
-            String device_id = tm.getDeviceId();
-            String mac = null;
-            FileReader fstream = null;
-            try {
-                fstream = new FileReader("/sys/class/net/wlan0/address");
-            } catch (FileNotFoundException e) {
-                fstream = new FileReader("/sys/class/net/eth0/address");
-            }
-            BufferedReader in = null;
-            if (fstream != null) {
-                try {
-                    in = new BufferedReader(fstream, 1024);
-                    mac = in.readLine();
-                } catch (IOException e) {
-                } finally {
-                    if (fstream != null) {
-                        try {
-                            fstream.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    if (in != null) {
-                        try {
-                            in.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-            json.put("mac", mac);
-            if (TextUtils.isEmpty(device_id)) {
-                device_id = mac;
-            }
-            if (TextUtils.isEmpty(device_id)) {
-                device_id = android.provider.Settings.Secure.getString(context.getContentResolver(),
-                        android.provider.Settings.Secure.ANDROID_ID);
-            }
-            json.put("device_id", device_id);
-            return json.toString();
+            String appKey = args.getString(0);
+            String channelId = args.getString(1);
+            UMConfigure.preInit(mContext, appKey, channelId);
+//            PushHelper.preInit(mContext);
+            callbackContext.success();
         } catch (Exception e) {
-            e.printStackTrace();
+            callbackContext.error(e.getMessage());
+            return false;
         }
-        return null;
+        return true;
+    }
+
+    /**
+    初始化
+     */
+    private boolean init(JSONArray args) {
+        try {
+            String appKey = args.getString(0);
+            String channelId = args.getString(1);
+            Integer deviceType = args.getInt(2);
+            String pushSecret = args.getString(3);
+            // 初始化
+            UMConfigure.init(mContext, appKey, channelId, deviceType, pushSecret);
+            // 页面采集模式
+            MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
+            callbackContext.success();
+        } catch (Exception e) {
+            callbackContext.error(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+    获得oaid
+     */
+    private boolean getOaid(JSONArray args) {
+        try {
+            UMConfigure.getOaid(mContext,new OnGetOaidListener() {
+                @Override
+                public void onGetOaid(String oaid) {
+                    callbackContext.success(oaid);
+                }
+            });
+            callbackContext.success();
+        } catch (Exception e) {
+            callbackContext.error(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+    程序退出时，用于保存统计数据的API
+    */
+    private boolean onKillProcess(JSONArray args) {
+        try {
+            MobclickAgent.onKillProcess(mContext);
+            callbackContext.success();
+        } catch (Exception e) {
+            callbackContext.error(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+    设置日志模式
+     */
+    private boolean setLogEnabled(JSONArray args) {
+        try {
+            boolean enabled = args.getBoolean(0);
+            UMConfigure.setLogEnabled(enabled);
+            callbackContext.success();
+        } catch (Exception e) {
+            callbackContext.error(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+    用户登录
+     */
+    private boolean login(JSONArray args) {
+        try {
+            String userId = args.getString(0);
+            String platform = args.getString(1);
+            if (platform.length() == 0) {
+                MobclickAgent.onProfileSignIn(userId);
+            } else {
+                MobclickAgent.onProfileSignIn(platform, userId);
+            }
+            callbackContext.success();
+        } catch (Exception e) {
+            callbackContext.error(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+    用户登出
+     */
+    private boolean logout(JSONArray args) {
+        try {
+            MobclickAgent.onProfileSignOff();
+            callbackContext.success();
+        } catch (Exception e) {
+            callbackContext.error(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+    设置页面采集模式
+     */
+    private boolean setPageCollectionMode(JSONArray args) {
+        try {
+            String mode = args.getString(0);
+            if (mode.equals("auto")) {
+                // 自动采集选择
+                MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
+            } else if (mode.equals("manual")) {
+                // 手动采集选择
+                MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.MANUAL);
+            }
+            callbackContext.success();
+        } catch (Exception e) {
+            callbackContext.error(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+    手动采集页面开始
+     */
+    private boolean onPageStart(JSONArray args) {
+        try {
+            String pageName = args.getString(0);
+            MobclickAgent.onPageStart(pageName);
+            callbackContext.success();
+        } catch (Exception e) {
+            callbackContext.error(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+    手动采集页面结束
+     */
+    private boolean onPageEnd(JSONArray args) {
+        try {
+            String pageName = args.getString(0);
+            MobclickAgent.onPageEnd(pageName);
+            callbackContext.success();
+        } catch (Exception e) {
+            callbackContext.error(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+    手动采集页面结束
+     */
+    private boolean onEvent(JSONArray args) {
+        try {
+            String name = args.getString(0);
+            Map<String, Object> map = (Map) args.getJSONObject(1);
+            MobclickAgent.onEventObject(mContext, name, map);
+            callbackContext.success();
+        } catch (Exception e) {
+            callbackContext.error(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+    注册推送获得推送设备token
+     */
+    private boolean registerPush(JSONArray args) {
+        try {
+            PushAgent.getInstance(mContext).register(new UPushRegisterCallback() {
+                @Override
+                public void onSuccess(String deviceToken) {
+                    callbackContext.success(deviceToken);
+                }
+                @Override
+                public void onFailure(String errCode, String errDesc) {
+                    callbackContext.error(errDesc);
+                }
+            });
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+    获取设备基本信息
+     */
+    private boolean getDeviceInfo(JSONArray args) {
+        try {
+            String uuid = Settings.Secure.getString(this.cordova.getActivity().getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+            String model = android.os.Build.MODEL;
+//            String productname = android.os.Build.PRODUCT;
+            String manufacturer = android.os.Build.MANUFACTURER;
+            String serial = android.os.Build.SERIAL;
+            String osversion = android.os.Build.VERSION.RELEASE;
+//            String sdkversion = android.os.Build.VERSION.SDK;
+            TimeZone tz = TimeZone.getDefault();
+            Boolean isVirtual = android.os.Build.FINGERPRINT.contains("generic") || android.os.Build.PRODUCT.contains("sdk");
+            String platform = android.os.Build.MANUFACTURER.equals("Amazon") ? "amazon-fireos" : "Android";
+            JSONObject json = new JSONObject();
+            json.put("uuid", uuid);
+            json.put("version", osversion);
+            json.put("platform", platform);
+            json.put("model", model);
+            json.put("manufacturer", manufacturer);
+	          json.put("isVirtual", isVirtual);
+            json.put("serial", serial);
+            this.callbackContext.success(json);
+        } catch (Exception e) {
+            callbackContext.error(e.getMessage());
+            return false;
+        }
+        return true;
     }
 }

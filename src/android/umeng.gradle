@@ -1,0 +1,16 @@
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    implementation fileTree(include:['*.jar'], dir:'libs')
+    // 统计
+    implementation (name:'umeng-asms-armeabi-v1.6.3', ext:'aar')
+    implementation (name:'umeng-abtest-v1.0.1', ext:'aar')
+    implementation (name:'umeng-apm-armeabi-v1.7.0', ext:'aar')
+    // 推送
+    implementation (name:'umeng-push-6.5.4', ext:'aar')
+    implementation (name:'umeng-agoo_tnet4android-3.1.14.10.2', ext:'aar')
+}

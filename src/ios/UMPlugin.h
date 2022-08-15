@@ -3,30 +3,18 @@
 
 @interface UMPlugin : CDVPlugin
 
-- (void)getDeviceId:(CDVInvokedUrlCommand*)command;
-- (void)onCCEvent:(CDVInvokedUrlCommand*)command;
-- (void)onEvent:(CDVInvokedUrlCommand*)command;
-- (void)onEventWithLabel:(CDVInvokedUrlCommand*)command;
-- (void)onEventWithParameters:(CDVInvokedUrlCommand*)command;
-- (void)onEventWithCounter:(CDVInvokedUrlCommand*)command;
-- (void)onPageBegin:(CDVInvokedUrlCommand*)command;
-- (void)onPageEnd:(CDVInvokedUrlCommand*)command;
+- (void)preInit:(CDVInvokedUrlCommand*)command;
+- (void)init:(CDVInvokedUrlCommand*)command;
 - (void)setLogEnabled:(CDVInvokedUrlCommand*)command;
-- (void)profileSignInWithPUID:(CDVInvokedUrlCommand*)command;
-- (void)profileSignInWithPUIDWithProvider:(CDVInvokedUrlCommand*)command;
-- (void)profileSignOff:(NSArray *)arguments;
-
-// 游戏统计
-- (void)setUserLevelId:(CDVInvokedUrlCommand*)command;
-- (void)startLevel:(CDVInvokedUrlCommand*)command;
-- (void)finishLevel:(CDVInvokedUrlCommand*)command;
-- (void)failLevel:(CDVInvokedUrlCommand*)command;
-- (void)exchange:(CDVInvokedUrlCommand*)command;
-- (void)pay:(CDVInvokedUrlCommand*)command ;
-- (void)payWithItem:(CDVInvokedUrlCommand*)command;
-- (void)buy:(CDVInvokedUrlCommand*)command;
-- (void)use:(CDVInvokedUrlCommand*)command;
-- (void)bonus:(CDVInvokedUrlCommand*)command;
-- (void)bonusWithItem:(CDVInvokedUrlCommand*)command;
+- (void)onKillProcess:(CDVInvokedUrlCommand*)command;
+- (void)getOaid:(CDVInvokedUrlCommand*)command;
+- (void)login:(CDVInvokedUrlCommand*)command;
+- (void)logout:(CDVInvokedUrlCommand*)command;
+- (void)setPageCollectionMode:(CDVInvokedUrlCommand*)command;
+- (void)onPageStart:(CDVInvokedUrlCommand*)command;
+- (void)onPageEnd:(CDVInvokedUrlCommand*)command;
+- (void)onEvent:(CDVInvokedUrlCommand*)command;
+- (void)registerPush:(CDVInvokedUrlCommand*)command;
+- (void)getDeviceInfo:(CDVInvokedUrlCommand*)command;
 
 @end

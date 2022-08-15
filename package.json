@@ -1,9 +1,9 @@
 {
-  "name": "@daiweinpm/cordova-plugin-umeng",
-  "version": "1.0.2",
-  "description": "cordova 集成友盟统计",
+  "name": "@daiweinpm/cordova-plugin-umengsdk",
+  "version": "3.0.1",
+  "description": "友盟统计 9.5.1 友盟性能监控 1.7.0 友盟消息推送 6.5.4",
   "cordova": {
-    "id": "cordova-plugin-umengd",
+    "id": "cordova-plugin-umengsdk",
     "platforms": [
       "android",
       "ios"
@@ -15,11 +15,16 @@
   },
   "keywords": [
     "cordova",
+    "cordova-plugin",
+    "cordova-plugin-umeng",
     "umeng",
+    "umengsdk",
     "daiwei",
-    "ecosystem:cordova",
-    "cordova-android",
-    "cordova-ios"
+    "友盟",
+    "友盟sdk",
+    "友盟统计",
+    "友盟应用性能分析",
+    "友盟消息推送"
   ],
   "author": "daiwei-git",
   "license": "MIT",
