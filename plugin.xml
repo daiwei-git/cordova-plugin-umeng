@@ -64,13 +64,13 @@
                 <source url="https://cdn.cocoapods.org/"/>
             </config>
             <pods use-frameworks="true">
-                <!-- 友盟统计基础库 -->
-                <pod name="UMCCommon" spec="~> 7.4.2" />
-                <pod name="UMCCommonLog" spec="~> 2.0.0" />
-                <pod name="UMDevice" spec="~> 2.2.3" />
-                <pod name="UMAPM" spec="~> 1.8.3" />
+                <!-- 友盟统计基础库 - 使用精确版本以确保稳定性 -->
+                <pod name="UMCCommon" spec="= 7.4.2" />
+                <pod name="UMCCommonLog" spec="= 2.0.0" />
+                <pod name="UMDevice" spec="= 2.2.3" />
+                <pod name="UMAPM" spec="= 1.8.3" />
                 <!-- 友盟推送 -->
-                <pod name="UMPush" spec="~> 4.8.0" />
+                <pod name="UMPush" spec="= 4.8.0" />
             </pods>
         </podspec>
         <!-- 系统依赖 -->

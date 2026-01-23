@@ -2,7 +2,25 @@
 
 ## [4.0.0] - 2026-01-23
 
-### 🎉 重大更新 (Breaking Changes)
+### 🔴 重大破坏性变更 (Breaking Changes)
+
+⚠️ **请仔细阅读以下内容再决定是否升级！**
+
+1. **Android 最低版本要求提升**
+   - minSdkVersion: 8 (Android 2.2+) → 19 (Android 4.4+)
+   - **如果您需要支持 Android 4.4 以下的设备，请不要升级到此版本**
+   - Android 4.4 以下设备市场占有率 < 1%（2024 年数据）
+
+2. **依赖管理方式改变**
+   - Android: 使用 Maven 依赖管理（需要网络下载）
+   - iOS: 使用 CocoaPods 依赖管理（需要网络下载）
+   - 首次构建时间会变长（需要下载依赖）
+
+3. **iOS CocoaPods 依赖版本固定**
+   - 使用精确版本号（=）而非兼容版本（~>）
+   - 确保生产环境稳定性，避免意外的版本升级
+
+### 🎉 SDK 版本升级 (SDK Version Upgrades)
 
 - **升级到最新的友盟 SDK 版本**
   - Android: Umeng Common 9.5.1 → 9.8.5
