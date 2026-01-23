@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<plugin id="cordova-plugin-umengsdk" version="3.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+<plugin id="cordova-plugin-umengsdk" version="4.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
     <name>UMSDK</name>
     <keywords>cordova,umeng,cordova-plugin,daiwei,友盟,友盟sdk,友盟统计,友盟应用性能分析,友盟消息推送</keywords>
-    <description>友盟统计 9.5.1 友盟性能监控 1.7.0 友盟消息推送 6.5.4</description>
+    <description>友盟统计 9.8.5 友盟性能监控 2.0.4 友盟消息推送 6.7.4 - 使用 Maven 依赖管理</description>
     <license>MIT</license>
     <js-module src="www/UMSDK.js" name="UMSDK">
         <clobbers target="UMSDK" />
@@ -10,22 +10,7 @@
     <preference name="APPKEY" />
     <!-- android -->
     <platform name="android">
-        <!-- 友盟统计 -->
-        <lib-file src="src/android/apm/apm_android_1.7.0/umeng-apm-armeabi-v1.7.0.aar" />
-        <lib-file src="src/android/common/common_android_9.5.1/umeng-abtest-v1.0.1.aar" />
-        <lib-file src="src/android/common/common_android_9.5.1/umeng-asms-armeabi-v1.6.3.aar" />
-        <lib-file src="src/android/common/common_android_9.5.1/umeng-common-9.5.1.jar" />
-        <!-- 友盟消息推送 -->
-        <lib-file src="src/android/push/push_android_6.5.4/umeng-agoo_networksdk-3.5.8.4.jar" />
-        <lib-file src="src/android/push/push_android_6.5.4/umeng-agoo_tnet4android-3.1.14.10.2.aar" />
-        <lib-file src="src/android/push/push_android_6.5.4/umeng-agoo-accs-3.4.2.7.4.jar" />
-        <lib-file src="src/android/push/push_android_6.5.4/umeng-alicloud_beacon-1.0.5.jar" />
-        <lib-file src="src/android/push/push_android_6.5.4/umeng-alicloud-httpdns-1.3.2.3.1.jar" />
-        <lib-file src="src/android/push/push_android_6.5.4/umeng-alicloud-utils-2.0.0.1.jar" />
-        <lib-file src="src/android/push/push_android_6.5.4/umeng-push-6.5.4.aar" />
-        <lib-file src="src/android/push/push_android_6.5.4/umeng-umdid-1.0.0.jar" />
-        <lib-file src="src/android/push/push_android_6.5.4/umeng-utdid-1.5.2.3.jar" />
-
+        <!-- Android SDK 现在通过 Maven 管理，不再需要手动包含 SDK 文件 -->
         <source-file src="src/android/UMPlugin.java" target-dir="src/com/umeng/plugin" />
         <config-file target="res/xml/config.xml" parent="/widget/plugins">
             <feature name="UMSDK">
@@ -72,16 +57,22 @@
             <!--<preference name="UMENG_CHANNEL" value="$UMENG_CHANNEL_IOS"/>-->
         </config-file>
         <!-- 友盟统计 -->
-        <framework src="src/ios/apm/apm_ios_1.7.0/UMAPM.framework" custom="true" framework="true"/>
-        <framework src="src/ios/common/common_ios_7.3.7/UMCommon.framework" custom="true" framework="true"/>
-        <framework src="src/ios/common/common_ios_7.3.7/UMDevice.framework" custom="true" framework="true"/>
-        <framework src="src/ios/common/common_ios_7.3.7/UMRemoteConfig.framework" custom="true" framework="true"/>
-        <framework src="src/ios/thirdparties/thirdparties_ios_1.0.5/UTDID.framework" custom="true" framework="true"/>
-        <framework src="src/ios/umcommonlog/umcommonlog_ios_2.0.0/UMCommonLog.framework" custom="true" framework="true"/>
-        <resource-file src="src/ios/umcommonlog/umcommonlog_ios_2.0.0/UMCommonLog.bundle"/>
-        <!-- 友盟消息推送 -->
-        <framework src="src/ios/push/push_ios_4.0.3/UMPush.framework" custom="true" framework="true"/>
-        <resource-file src="src/ios/push/push_ios_4.0.3/UMPushResource.bundle"/>
+        <!-- iOS SDK 使用 CocoaPods 管理 -->
+        <!-- 添加 CocoaPods 依赖 -->
+        <podspec>
+            <config>
+                <source url="https://cdn.cocoapods.org/"/>
+            </config>
+            <pods use-frameworks="true">
+                <!-- 友盟统计基础库 -->
+                <pod name="UMCCommon" spec="~> 7.4.2" />
+                <pod name="UMCCommonLog" spec="~> 2.0.0" />
+                <pod name="UMDevice" spec="~> 2.2.3" />
+                <pod name="UMAPM" spec="~> 1.8.3" />
+                <!-- 友盟推送 -->
+                <pod name="UMPush" spec="~> 4.8.0" />
+            </pods>
+        </podspec>
         <!-- 系统依赖 -->
         <framework src="CoreTelephony.framework" />
         <framework src="libsqlite3.tbd"/>

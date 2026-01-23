@@ -1,1 +1,15 @@
 .idea
+node_modules
+*.log
+.DS_Store
+Thumbs.db
+
+# 旧的 SDK 文件 - 现在使用 Maven/CocoaPods 管理
+# src/android/apm/
+# src/android/common/
+# src/android/push/
+# src/ios/apm/
+# src/ios/common/
+# src/ios/push/
+# src/ios/thirdparties/
+# src/ios/umcommonlog/

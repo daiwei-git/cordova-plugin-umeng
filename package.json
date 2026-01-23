@@ -1,7 +1,7 @@
 {
   "name": "@daiweinpm/cordova-plugin-umengsdk",
-  "version": "3.0.1",
-  "description": "友盟统计 9.5.1 友盟性能监控 1.7.0 友盟消息推送 6.5.4",
+  "version": "4.0.0",
+  "description": "友盟统计 9.8.5 友盟性能监控 2.0.4 友盟消息推送 6.7.4 - 使用 Maven/CocoaPods 依赖管理",
   "cordova": {
     "id": "cordova-plugin-umengsdk",
     "platforms": [
