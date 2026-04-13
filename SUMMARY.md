@@ -80,7 +80,7 @@
 ## 📁 文件变更
 
 ### 修改的文件
-- ✅ `package.json` - 版本号更新到 4.0.0
+- ✅ `package.json` - 版本号更新到 4.0.1
 - ✅ `plugin.xml` - 完全重构，使用现代依赖管理
 - ✅ `src/android/umeng.gradle` - Maven 依赖配置
 - ✅ `README.md` - 完全重写，提供详细文档
@@ -115,7 +115,7 @@
 
 1. **安装测试**
    ```bash
-   cordova plugin add @daiweinpm/cordova-plugin-umengsdk@4.0.0
+   cordova plugin add @daiweinpm/cordova-plugin-umengsdk@4.0.1
    ```
 
 2. **构建测试**
@@ -138,7 +138,7 @@
 
 ### 准备发布到 npm
 
-1. **更新版本号**: ✅ 已完成 (4.0.0)
+1. **更新版本号**: ✅ 已完成 (4.0.1)
 2. **更新文档**: ✅ 已完成
 3. **测试插件**: ⏳ 待测试
 4. **创建 Git Tag**: ⏳ 待创建
@@ -148,8 +148,8 @@
 
 ```bash
 # 创建 git tag
-git tag -a v4.0.0 -m "Release version 4.0.0 - Upgrade to latest Umeng SDK"
-git push origin v4.0.0
+git tag -a v4.0.1 -m "Release version 4.0.1"
+git push origin v4.0.1
 
 # 发布到 npm
 npm publish --access public
@@ -162,7 +162,7 @@ npm publish --access public
 ### 安装
 
 ```bash
-cordova plugin add @daiweinpm/cordova-plugin-umengsdk@4.0.0 --variable APPKEY=YOUR_APPKEY
+cordova plugin add @daiweinpm/cordova-plugin-umengsdk@4.0.1 --variable APPKEY=YOUR_APPKEY
 ```
 
 ### 快速开始
@@ -214,6 +214,6 @@ UMSDK.onEvent('ButtonClick', {
 
 ---
 
-*生成时间: 2026-01-23*  
-*版本: 4.0.0*  
+*生成时间: 2026-04-13*  
+*版本: 4.0.1*  
 *分支: copilot/update-umeng-compatibility*

@@ -76,7 +76,7 @@ cordova plugin remove @daiweinpm/cordova-plugin-umengsdk
 #### 3. 安装新版本
 
 ```bash
-cordova plugin add @daiweinpm/cordova-plugin-umengsdk@4.0.0 --variable APPKEY=YOUR_APPKEY
+cordova plugin add @daiweinpm/cordova-plugin-umengsdk@4.0.1 --variable APPKEY=YOUR_APPKEY
 ```
 
 或从 GitHub 安装：

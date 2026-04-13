@@ -1,5 +1,19 @@
 # 更新日志 (Changelog)
 
+## [4.0.1] - 2026-04-13
+
+### 🔧 发布维护 (Release Maintenance)
+
+- 同步 `package.json`、`package-lock.json` 与 `plugin.xml` 的版本号到 `4.0.1`
+- 补充 `4.0.1` 发布记录，确保 npm / Cordova 发布元数据一致
+- 更新文档中的固定安装版本与发版命令示例
+
+### ✅ 兼容性说明 (Compatibility)
+
+- 无 JavaScript API 变更
+- 无 Android / iOS SDK 依赖版本变更
+- `4.0.1` 可视为 `4.0.0` 的发布维护版本
+
 ## [4.0.0] - 2026-01-23
 
 ### 🔴 重大破坏性变更 (Breaking Changes)
