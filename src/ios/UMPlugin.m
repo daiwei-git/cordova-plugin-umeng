@@ -39,6 +39,17 @@
 }
 
 - (void)preInit:(CDVInvokedUrlCommand*)command {
+    NSString *appKey = [command.arguments objectAtIndex:0];
+    if (appKey == nil || [appKey isKindOfClass:[NSNull class]]) {
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"appKey is required"];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        return;
+    }
+    NSString *channelId = [command.arguments objectAtIndex:1];
+    if ([channelId isKindOfClass:[NSNull class]]) {
+        channelId = nil;
+    }
+    [UMConfigure preInit:appKey channel:channelId];
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
@@ -46,6 +57,8 @@
 - (void)init:(CDVInvokedUrlCommand*)command {
     NSString *appKey = [command.arguments objectAtIndex:0];
     if (appKey == nil || [appKey isKindOfClass:[NSNull class]]) {
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"appKey is required"];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         return;
     }
     NSString *channelId = [command.arguments objectAtIndex:1];
@@ -63,6 +76,8 @@
 - (void)setLogEnabled:(CDVInvokedUrlCommand*)command {
     NSString *arg0 = [command.arguments objectAtIndex:0];
     if (arg0 == nil || [arg0 isKindOfClass:[NSNull class]]) {
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"enabled parameter is required"];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         return;
     }
     BOOL enabled = [arg0 boolValue];
@@ -84,10 +99,12 @@
 - (void)login:(CDVInvokedUrlCommand*)command  {
     NSString *puid = [command.arguments objectAtIndex:0];
     if (puid == nil || [puid isKindOfClass:[NSNull class]]) {
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"userId is required"];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         return;
     }
     NSString *platformName = [command.arguments objectAtIndex:1];
-    if (platformName == nil) {
+    if (platformName == nil || [platformName isKindOfClass:[NSNull class]]) {
         [MobClick profileSignInWithPUID: puid];
     } else {
         [MobClick profileSignInWithPUID:puid provider:platformName];
