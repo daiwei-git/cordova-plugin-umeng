@@ -1,0 +1,26 @@
+# 开发文件
+.idea
+.git
+.github
+node_modules
+*.log
+.DS_Store
+Thumbs.db
+
+# 旧的 SDK 二进制文件 — v4.0.0 使用 Maven/CocoaPods 在线下载
+src/android/apm/
+src/android/common/
+src/android/push/
+src/ios/apm/
+src/ios/common/
+src/ios/push/
+src/ios/thirdparties/
+src/ios/umcommonlog/
+
+# 测试
+tests/
+
+# 文档（README 自动包含）
+SUMMARY.md
+MIGRATION.md
+CHANGELOG.md

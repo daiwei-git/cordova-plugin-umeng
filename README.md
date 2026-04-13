@@ -1,370 +1,332 @@
-# 说明
+# cordova-plugin-umeng
 
-友盟统计、友盟性能检测SDK、消息推送 Cordova 插件。由于隐私政策原因，默认自动收集已改为手动收集，请在适当的时候使用 init 函数初始化。
+[![npm version](https://img.shields.io/npm/v/@daiweinpm/cordova-plugin-umengsdk.svg?style=flat-square)](https://www.npmjs.com/package/@daiweinpm/cordova-plugin-umengsdk)
+[![license](https://img.shields.io/npm/l/@daiweinpm/cordova-plugin-umengsdk.svg?style=flat-square)](https://github.com/daiwei-git/cordova-plugin-umeng/blob/main/LICENSE)
+[![platform](https://img.shields.io/badge/platform-Android%20%7C%20iOS-brightgreen?style=flat-square)](#版本兼容性)
+
+> 友盟统计 · 友盟性能监控 (APM) · 友盟消息推送 — Cordova / Ionic 插件
+
+由于隐私政策原因，默认自动采集已改为手动采集，请在用户同意隐私协议后调用 `init` 完成初始化。
+
+---
+
+## 目录
+
+- [SDK 版本](#sdk-版本)
+- [v4.0.0 新特性](#v400-新特性)
+- [安装](#安装)
+- [快速开始](#快速开始)
+- [API 参考](#api-参考)
+- [使用示例](#使用示例)
+- [注意事项](#注意事项)
+- [版本兼容性](#版本兼容性)
+- [迁移指南](#迁移指南)
+- [常见问题](#常见问题)
+- [技术支持](#技术支持)
+- [许可证](#许可证)
+
+---
 
 ## SDK 版本
 
-本插件已升级到最新版本，支持最新的友盟 SDK：
+| 平台 | 组件 | 版本 |
+|------|------|------|
+| **Android** | 友盟统计 (Analytics) | 9.8.5 |
+| | 友盟性能监控 (APM) | 2.0.4 |
+| | 友盟消息推送 (Push) | 6.7.4 |
+| | ASMS | 1.8.7.2 |
+| **iOS** | UMCommon | 7.4.2 |
+| | UMAPM | 1.8.3 |
+| | UMPush | 4.8.0 |
+| | UMCommonLog | 2.0.0 |
+| | UMDevice | 2.2.3 |
 
-### Android 版本
-- **友盟统计 (Analytics)**: 9.8.5
-- **友盟性能监控 (APM)**: 2.0.4  
-- **友盟消息推送 (Push)**: 6.7.4
-- **ASMS**: 1.8.7.2
+---
 
-### iOS 版本
-- **UMCommon**: 7.4.2
-- **UMAPM**: 1.8.3
-- **UMPush**: 4.8.0
-- **UMCommonLog**: 2.0.0
-- **UMDevice**: 2.2.3
+## v4.0.0 新特性
 
-## 新特性
+### ✨ 重大改进
 
-### v4.0.0 更新内容
+- Android 端使用 **Maven** 依赖管理，不再需要手动下载 SDK 文件
+- iOS 端使用 **CocoaPods** 依赖管理，自动管理依赖
+- 插件体积从 ~50 MB 降至 ~50 KB（减少 99%）
+- 升级到最新友盟 SDK，支持最新 Android / iOS 系统
 
-✨ **重大改进**：
-- ✅ 升级到最新的友盟 SDK 版本
-- ✅ Android 端使用 Maven 依赖管理，不再需要手动下载 SDK 文件
-- ✅ iOS 端使用 CocoaPods 依赖管理，自动管理依赖
-- ✅ 简化了安装过程，减少插件体积
-- ✅ 更容易升级和维护
-- ✅ 支持最新的 Android 和 iOS 系统
+### ⚠️ 破坏性变更 (Breaking Changes)
 
-⚠️ **重要变更 (Breaking Changes)**：
-- **Android 最低版本要求**: minSdkVersion 从 8 提升到 19 (Android 4.4+)
-  - 如果您需要支持更旧的 Android 版本，请继续使用 3.x 版本
-  - Android 4.4 以下的设备市场占有率已经非常低（< 1%）
-- **首次构建时间**: iOS 首次构建需要下载 CocoaPods 依赖，可能需要几分钟
-- **依赖管理**: 不再使用本地 SDK 文件，改用在线依赖下载
+| 变更项 | 说明 |
+|--------|------|
+| Android minSdkVersion | 从 **8** 提升到 **19**（Android 4.4+）；如需支持更旧版本请使用 3.x |
+| 首次构建时间 | iOS 首次构建需下载 CocoaPods 依赖，可能需要几分钟 |
+| 依赖管理 | 不再使用本地 SDK 文件，改为在线下载 |
+
+> 详细变更请查看 [CHANGELOG.md](CHANGELOG.md)，迁移步骤请查看 [MIGRATION.md](MIGRATION.md)。
+
+---
 
 ## 安装
 
 ### 前提条件
 
-**Android**:
-- 无需额外配置，Maven 会自动下载依赖
+- **Android**: 无需额外配置，Maven 会自动下载依赖
+- **iOS**: 需安装 CocoaPods — `sudo gem install cocoapods`；Cordova iOS ≥ 9.0.0
 
-**iOS**:
-- 确保已安装 CocoaPods: `sudo gem install cocoapods`
-- Cordova iOS 平台需要支持 CocoaPods (Cordova 9.0.0+)
-
-### 使用 npm 安装
+### 通过 npm
 
 ```shell
 npm i @daiweinpm/cordova-plugin-umengsdk
 ```
 
-### 使用 Cordova CLI 安装
+### 通过 Cordova CLI
 
 ```shell
 cordova plugin add @daiweinpm/cordova-plugin-umengsdk --variable APPKEY=YOUR_APPKEY
 ```
 
-### 从 GitHub 安装
+### 从 GitHub
 
 ```shell
 cordova plugin add https://github.com/daiwei-git/cordova-plugin-umeng.git --variable APPKEY=YOUR_APPKEY
 ```
 
-### 构建项目
+### 构建
 
 ```shell
-# 构建 iOS 项目
-cordova build ios
-
-# 构建 Android 项目
 cordova build android
+cordova build ios    # 首次构建 CocoaPods 会自动下载依赖，请耐心等待
 ```
 
-**注意**: iOS 首次构建时，CocoaPods 会自动下载依赖，可能需要较长时间，请耐心等待。
+---
 
-### 使用方式
-
-```javascript
-/**
- * 请在代码中引入这一句，或者从 window 中使用 window.UMSDK
- */
-declare const UMSDK;
-
-/**
- * 插件安装失败时此对象可能无法使用，所以需要加入判断
- */
-if (UMSDK) {
-    /**
-     * 预初始化（可选）
-     * 在某些情况下，您可能需要在 init 之前调用 preInit
-     * @param appKey - 友盟 AppKey
-     * @param channelId - 渠道 ID
-     */
-    UMSDK.preInit(appKey, channelId): Promise<any>;
-
-    /**
-     * 初始化友盟 SDK（必须）
-     * 注意: 即使您已经在 AndroidManifest.xml 中配置过 appkey 和 channel 值，
-     * 也需要在 App 代码中调用初始化接口。
-     * 
-     * @param appKey - 友盟 AppKey
-     * @param channelId - 渠道 ID
-     * @param deviceType - 设备类型，1 为手机、2 为盒子，默认为手机
-     * @param pushSecret - 推送密钥 Push 推送业务的 secret
-     */
-    UMSDK.init(appKey, channelId, deviceType, pushSecret): Promise<any>;
-
-    /**
-     * 开启统计日志模式
-     * @param isOpen - true 开启，false 关闭
-     */
-    UMSDK.setLogEnabled(isOpen): Promise<any>;
-
-    /**
-     * 用户登录
-     * @param userId - 用户 ID
-     * @param provider - 提供者（可选）
-     */
-    UMSDK.login(userId, provider): Promise<any>;
-
-    /**
-     * 用户登出
-     * logout 调用后，不再发送账号内容
-     */
-    UMSDK.logout(): Promise<any>;
-    
-    /**
-     * 设置页面采集模式
-     * @param mode - 采集模式: "auto" = 自动（默认），"manual" = 手动
-     */
-    UMSDK.setPageCollectionMode(mode): Promise<any>;
-    
-    /**
-     * 手动采集页面开始
-     * 必须配对调用 onPageStart 和 onPageEnd 两个函数来完成统计
-     * 若只调用某一个函数不会生成有效数据
-     * 在该页面展示时调用 onPageStart，当退出该页面时调用 onPageEnd
-     * 
-     * @param pageName - 页面名称
-     */
-    UMSDK.onPageStart(pageName): Promise<any>;
-
-    /**
-     * 手动采集页面结束
-     * 必须与 onPageStart 配对调用
-     * 
-     * @param pageName - 页面名称
-     */
-    UMSDK.onPageEnd(pageName): Promise<any>;
-
-    /**
-     * 自定义事件埋点
-     * @param name - 事件名称
-     * @param attributes - 自定义参数对象（可选）
-     */
-    UMSDK.onEvent(name, attributes: {}): Promise<any>;
-
-    /**
-     * 注册消息推送
-     * @returns Promise 返回设备 token
-     */
-    UMSDK.registerPush(): Promise<any>;
-
-    /**
-     * 获取设备信息
-     * @returns Promise 返回设备信息对象
-     */
-    UMSDK.getDeviceInfo(): Promise<any>;
-
-    /**
-     * 获取 OAID（仅 Android）
-     * @returns Promise 返回 OAID
-     */
-    UMSDK.getOaid(): Promise<any>;
-
-    /**
-     * 程序退出时保存统计数据（仅 Android）
-     * 在应用退出时调用此方法保存统计数据
-     */
-    UMSDK.onKillProcess(): Promise<any>;
-}
-```
-
-## 使用示例
-
-### 基本初始化
+## 快速开始
 
 ```javascript
-// 在应用启动时初始化
-document.addEventListener('deviceready', function() {
-    if (typeof UMSDK !== 'undefined') {
-        // 开启日志（开发阶段）
-        UMSDK.setLogEnabled(true)
-            .then(() => console.log('友盟日志已开启'))
-            .catch(err => console.error('开启日志失败:', err));
+document.addEventListener('deviceready', async () => {
+  if (typeof UMSDK === 'undefined') return;
 
-        // 初始化 SDK
-        UMSDK.init('YOUR_APPKEY', 'YOUR_CHANNEL', 1, 'YOUR_PUSH_SECRET')
-            .then(() => {
-                console.log('友盟 SDK 初始化成功');
-            })
-            .catch(err => {
-                console.error('友盟 SDK 初始化失败:', err);
-            });
-    }
+  // 1. 开启日志（仅开发阶段）
+  await UMSDK.setLogEnabled(true);
+
+  // 2. 初始化（必须在用户同意隐私协议之后）
+  await UMSDK.init('YOUR_APPKEY', 'YOUR_CHANNEL', 1, 'YOUR_PUSH_SECRET');
+
+  // 3. 注册推送（可选）
+  const token = await UMSDK.registerPush();
+  console.log('Device Token:', token);
 }, false);
 ```
 
-### 用户登录登出
+---
+
+## API 参考
+
+所有方法均返回 `Promise`，可通过 `window.UMSDK` 或直接使用全局变量 `UMSDK` 调用。
+
+### 初始化
+
+| 方法 | 参数 | 说明 |
+|------|------|------|
+| `preInit(appKey, channelId)` | `appKey`: string, `channelId`: string | 预初始化（可选），在某些场景下需先于 `init` 调用 |
+| `init(appKey, channelId, deviceType, pushSecret)` | `appKey`: string, `channelId`: string, `deviceType`: number (1=手机, 2=盒子), `pushSecret`: string | **必须调用**。初始化友盟 SDK，即使已在 AndroidManifest.xml 中配置也需要调用 |
+| `setLogEnabled(isOpen)` | `isOpen`: boolean | 开启 / 关闭统计日志，生产环境请设为 `false` |
+
+### 用户账号
+
+| 方法 | 参数 | 说明 |
+|------|------|------|
+| `login(userId, provider?)` | `userId`: string, `provider`: string (可选) | 用户登录 |
+| `logout()` | — | 用户登出，调用后不再发送账号内容 |
+
+### 页面统计
+
+| 方法 | 参数 | 说明 |
+|------|------|------|
+| `setPageCollectionMode(mode)` | `mode`: `"auto"` \| `"manual"` | 设置页面采集模式，默认 `"auto"` |
+| `onPageStart(pageName)` | `pageName`: string | 手动模式下，页面展示时调用 |
+| `onPageEnd(pageName)` | `pageName`: string | 手动模式下，退出页面时调用；必须与 `onPageStart` 配对 |
+
+### 事件埋点
+
+| 方法 | 参数 | 说明 |
+|------|------|------|
+| `onEvent(name, attributes?)` | `name`: string, `attributes`: object (可选) | 自定义事件埋点 |
+
+### 推送与设备
+
+| 方法 | 参数 | 说明 |
+|------|------|------|
+| `registerPush()` | — | 注册消息推送，返回设备 token |
+| `getDeviceInfo()` | — | 获取设备信息对象（uuid, platform, model 等） |
+| `getOaid()` | — | 获取 OAID（仅 Android） |
+| `onKillProcess()` | — | 程序退出时保存统计数据（仅 Android） |
+
+---
+
+## 使用示例
+
+### 用户登录 / 登出
 
 ```javascript
-// 用户登录
-UMSDK.login('user123')
-    .then(() => console.log('用户登录成功'))
-    .catch(err => console.error('登录失败:', err));
-
-// 用户登出
-UMSDK.logout()
-    .then(() => console.log('用户登出成功'))
-    .catch(err => console.error('登出失败:', err));
+// 登录
+await UMSDK.login('user123');
+// 带平台参数登录
+await UMSDK.login('user123', 'wechat');
+// 登出
+await UMSDK.logout();
 ```
 
 ### 页面统计
 
 ```javascript
-// 方式1: 自动页面统计（推荐）
-UMSDK.setPageCollectionMode('auto');
+// 方式 1: 自动（推荐）
+await UMSDK.setPageCollectionMode('auto');
 
-// 方式2: 手动页面统计
-UMSDK.setPageCollectionMode('manual');
-
-// 页面开始
-UMSDK.onPageStart('HomePage')
-    .then(() => console.log('页面统计开始'))
-    .catch(err => console.error('页面统计失败:', err));
-
-// 页面结束
-UMSDK.onPageEnd('HomePage')
-    .then(() => console.log('页面统计结束'))
-    .catch(err => console.error('页面统计失败:', err));
+// 方式 2: 手动
+await UMSDK.setPageCollectionMode('manual');
+await UMSDK.onPageStart('HomePage');
+// ... 用户浏览页面 ...
+await UMSDK.onPageEnd('HomePage');
 ```
 
 ### 自定义事件
 
 ```javascript
 // 简单事件
-UMSDK.onEvent('ButtonClick')
-    .then(() => console.log('事件已记录'))
-    .catch(err => console.error('事件记录失败:', err));
+await UMSDK.onEvent('ButtonClick');
 
-// 带参数的事件
-UMSDK.onEvent('Purchase', {
-    product: 'Premium',
-    price: 99.99,
-    currency: 'USD'
-})
-    .then(() => console.log('购买事件已记录'))
-    .catch(err => console.error('事件记录失败:', err));
+// 带参数
+await UMSDK.onEvent('Purchase', {
+  product: 'Premium',
+  price: 99.99,
+  currency: 'CNY'
+});
 ```
 
 ### 消息推送
 
 ```javascript
-// 注册推送
-UMSDK.registerPush()
-    .then(deviceToken => {
-        console.log('推送注册成功，设备 Token:', deviceToken);
-        // 将 token 发送到您的服务器
-    })
-    .catch(err => {
-        console.error('推送注册失败:', err);
-    });
+try {
+  const deviceToken = await UMSDK.registerPush();
+  console.log('Device Token:', deviceToken);
+  // 将 token 上传到您的服务器
+} catch (err) {
+  console.error('推送注册失败:', err);
+}
 ```
 
 ### 获取设备信息
 
 ```javascript
-UMSDK.getDeviceInfo()
-    .then(deviceInfo => {
-        console.log('设备信息:', deviceInfo);
-        // deviceInfo 包含: uuid, platform, model, version 等
-    })
-    .catch(err => {
-        console.error('获取设备信息失败:', err);
-    });
+const info = await UMSDK.getDeviceInfo();
+console.log(info); // { uuid, platform, model, version, ... }
 ```
+
+---
 
 ## 注意事项
 
-1. **隐私政策**: 根据最新的隐私政策要求，必须在用户同意隐私政策后再调用 `init` 方法
-2. **初始化时机**: 建议在 `deviceready` 事件触发后初始化 SDK
-3. **页面统计**: 如果使用手动页面统计，必须配对调用 `onPageStart` 和 `onPageEnd`
-4. **日志模式**: 生产环境请关闭日志模式 `setLogEnabled(false)`
-5. **Android 权限**: 插件已自动添加必要的权限到 AndroidManifest.xml
-6. **iOS 配置**: 如需使用推送功能，需要在 Xcode 中配置推送证书和 capabilities
+| # | 说明 |
+|---|------|
+| 1 | **隐私政策**：必须在用户同意隐私政策后再调用 `init` |
+| 2 | **初始化时机**：在 `deviceready` 事件触发后初始化 |
+| 3 | **页面统计**：手动模式下 `onPageStart` 和 `onPageEnd` 必须成对调用 |
+| 4 | **日志**：生产环境请关闭 `setLogEnabled(false)` |
+| 5 | **Android 权限**：插件已自动添加所需权限到 AndroidManifest.xml |
+| 6 | **iOS 推送**：需在 Xcode 中配置推送证书与 Capabilities |
+
+---
 
 ## 版本兼容性
 
-- **Cordova**: 9.0.0+
-- **Cordova-Android**: 8.0.0+
-- **Cordova-iOS**: 5.0.0+
-- **Android**: API 19+ (Android 4.4+)
-- **iOS**: 10.0+
+| 依赖 | 最低版本 |
+|------|---------|
+| Cordova | 9.0.0+ |
+| Cordova-Android | 8.0.0+ |
+| Cordova-iOS | 5.0.0+ |
+| Android API | 19 (Android 4.4+) |
+| iOS | 10.0+ |
+
+---
 
 ## 迁移指南
 
 ### 从 3.x 升级到 4.0.0
 
-1. **移除旧插件**:
-   ```shell
-   cordova plugin remove cordova-plugin-umengsdk
-   ```
+```shell
+# 1. 移除旧插件
+cordova plugin remove cordova-plugin-umengsdk
 
-2. **安装新插件**:
-   ```shell
-   cordova plugin add @daiweinpm/cordova-plugin-umengsdk --variable APPKEY=YOUR_APPKEY
-   ```
+# 2. 安装新版本
+cordova plugin add @daiweinpm/cordova-plugin-umengsdk --variable APPKEY=YOUR_APPKEY
 
-3. **iOS 额外步骤**:
-   - 确保已安装 CocoaPods
-   - 首次构建时，CocoaPods 会自动下载依赖
-   - 如遇到问题，可以尝试 `pod repo update`
+# 3. 重新构建
+cordova build
+```
 
-4. **API 变化**: 
-   - API 接口保持不变，无需修改代码
-   - 只是底层 SDK 版本升级
+- **iOS 额外步骤**：确保已安装 CocoaPods；如遇问题执行 `pod repo update`
+- **API 无变化**：JavaScript API 完全兼容，无需修改业务代码
+
+> 完整迁移指南请查看 [MIGRATION.md](MIGRATION.md)。
+
+---
 
 ## 常见问题
 
-### Q: iOS 构建失败，提示找不到 CocoaPods？
-A: 请确保已安装 CocoaPods: `sudo gem install cocoapods`，然后运行 `pod setup`
+<details>
+<summary><b>iOS 构建失败，提示找不到 CocoaPods？</b></summary>
 
-### Q: Android 构建失败，提示找不到依赖？
-A: 请确保网络连接正常，Maven 需要从网络下载依赖。如在中国大陆，可能需要配置 Maven 镜像。
+请确保已安装 CocoaPods：
 
-### Q: 推送功能不工作？
-A: 请确保：
-- 正确配置了 pushSecret
+```shell
+sudo gem install cocoapods
+pod setup
+```
+</details>
+
+<details>
+<summary><b>Android 构建失败，提示找不到依赖？</b></summary>
+
+请确保网络连接正常。如在中国大陆，可在 `build-extras.gradle` 中配置阿里云 Maven 镜像：
+
+```gradle
+allprojects {
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        maven { url 'https://maven.aliyun.com/repository/google/' }
+    }
+}
+```
+</details>
+
+<details>
+<summary><b>推送功能不工作？</b></summary>
+
+- 检查 `pushSecret` 是否正确
 - iOS 需在 Xcode 中配置推送证书
-- Android 需在友盟后台配置推送
+- Android 需在友盟后台配置推送参数
+</details>
 
-### Q: 统计数据不准确？
-A: 请确保：
-- 正确调用了 init 方法
-- 页面统计使用了正确的模式（自动或手动）
-- 手动模式下，onPageStart 和 onPageEnd 成对调用
+<details>
+<summary><b>统计数据不准确？</b></summary>
+
+- 确认已正确调用 `init`
+- 检查页面统计模式（自动 / 手动）
+- 手动模式下确保 `onPageStart` 和 `onPageEnd` 成对调用
+</details>
+
+---
 
 ## 技术支持
 
-- **Issues**: https://github.com/daiwei-git/cordova-plugin-umeng/issues
-- **友盟官方文档**: https://developer.umeng.com/
-- **Email**: 通过 GitHub Issues 联系
+- 🐛 **Issues**: [GitHub Issues](https://github.com/daiwei-git/cordova-plugin-umeng/issues)
+- 📖 **友盟官方文档**: [developer.umeng.com](https://developer.umeng.com/)
+
+---
 
 ## 许可证
 
-MIT License
+[MIT](LICENSE) © daiwei
 
 ## 贡献
 
 欢迎提交 Pull Request 和 Issue！
-
----
-
-如有问题或建议，欢迎在 GitHub 上提 Issue。
