@@ -11,7 +11,7 @@
     <!-- android -->
     <platform name="android">
         <!-- Android SDK 现在通过 Maven 管理，不再需要手动包含 SDK 文件 -->
-        <source-file src="src/android/UMPlugin.java" target-dir="src/com/umeng/plugin" />
+        <source-file src="src/android/UMPlugin.java" target-dir="src/com/daiwei/umsdk/cdv" />
         <config-file target="res/xml/config.xml" parent="/widget/plugins">
             <feature name="UMSDK">
                 <param name="android-package" value="com.daiwei.umsdk.cdv.UMPlugin"/>

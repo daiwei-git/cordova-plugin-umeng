@@ -14,11 +14,6 @@
 #import <UMCommonLog/UMCommonLogHeaders.h>
 // DEVICE
 #import <UMDevice/UMZid.h>
-// UMRemoteConfig
-#import <UMRemoteConfig/UMRemoteConfig.h>
-#import <UMRemoteConfig/UMRemoteConfigSettings.h>
-// UTDID
-#import <UTDID/UTDevice.h>
 
 @implementation UIDevice (ModelVersion)
 - (NSString*)modelVersion

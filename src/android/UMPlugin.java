@@ -1,5 +1,7 @@
 package com.daiwei.umsdk.cdv;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -126,7 +128,6 @@ public class UMPlugin extends CordovaPlugin {
                     callbackContext.success(oaid);
                 }
             });
-            callbackContext.success();
         } catch (Exception e) {
             callbackContext.error(e.getMessage());
             return false;
@@ -169,8 +170,8 @@ public class UMPlugin extends CordovaPlugin {
     private boolean login(JSONArray args) {
         try {
             String userId = args.getString(0);
-            String platform = args.getString(1);
-            if (platform.length() == 0) {
+            String platform = args.isNull(1) ? null : args.getString(1);
+            if (platform == null || platform.length() == 0) {
                 MobclickAgent.onProfileSignIn(userId);
             } else {
                 MobclickAgent.onProfileSignIn(platform, userId);
@@ -254,7 +255,13 @@ public class UMPlugin extends CordovaPlugin {
     private boolean onEvent(JSONArray args) {
         try {
             String name = args.getString(0);
-            Map<String, Object> map = (Map) args.getJSONObject(1);
+            JSONObject jsonObject = args.getJSONObject(1);
+            Map<String, Object> map = new HashMap<String, Object>();
+            Iterator<String> keys = jsonObject.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                map.put(key, jsonObject.get(key));
+            }
             MobclickAgent.onEventObject(mContext, name, map);
             callbackContext.success();
         } catch (Exception e) {
