@@ -31,5 +31,11 @@
   "bugs": {
     "url": "https://github.com/daiwei-git/cordova-plugin-umeng/issues"
   },
-  "homepage": "https://github.com/daiwei-git/cordova-plugin-umeng#readme"
+  "homepage": "https://github.com/daiwei-git/cordova-plugin-umeng#readme",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^30.3.0"
+  }
 }
